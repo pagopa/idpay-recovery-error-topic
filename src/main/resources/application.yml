@@ -9,87 +9,36 @@ spring:
   application:
     name: idpay-recovery-error-topic
   jmx.enabled: true
-  cloud:
-    azure:
-      servicebus:
-        connection-string: ${SERVICEBUS_ONBOARDING_CONNECTION_STRING:}
-    stream:
-      function:
-        definition: admissibilityProcessor;admissibilityDelayProducer;beneficiaryRuleBuilderConsumer
-      bindings:
-        admissibilityProcessor-in-0:
-          destination: ${KAFKA_ONBOARDING_REQUEST_TOPIC:idpay-onboarding-request}
-#          group: ${KAFKA_ONBOARDING_REQUEST_GROUP_ID:idPayAdmissibilityProcessor}
-#          content-type: ${KAFKA_CONTENT_TYPE:application/json}
-          binder: kafka-onboarding-request
-        admissibilityProcessor-out-0:
-          destination: ${KAFKA_ONBOARDING_OUTCOME_TOPIC:idpay-onboarding-outcome}
-          content-type: ${KAFKA_CONTENT_TYPE:application/json}
-          binder: kafka-onboarding-outcome
-        admissibilityDelayProducer-out-0:
-          destination: ${KAFKA_ONBOARDING_REQUEST_TOPIC:idpay-onboarding-request}
-          binder: kafka-onboarding-request
-        beneficiaryRuleBuilderConsumer-in-0:
-          destination: ${KAFKA_BENEFICIARY_RULE_REQUEST_TOPIC:idpay-beneficiary-rule-update}
-          group: ${KAFKA_BENEFICIARY_RULE_REQUEST_GROUP_ID:idPayBeneficiaryRuleConsumer}
-          content-type: ${KAFKA_CONTENT_TYPE:application/json}
-          binder: kafka-beneficiary-rule-builder
-        errors-out-0:
-          destination: ${KAFKA_ERRORS_TOPIC:idpay-errors}
-          content-type: ${KAFKA_CONTENT_TYPE:application/json}
-          binder: kafka-errors
-      servicebus:
-        bindings:
-          admissibilityDelayProducer-out-0:
-            producer:
-              entity-type: queue
-      binders:
-        kafka-onboarding-request:
-          type: servicebus
-        kafka-onboarding-outcome:
-          type: kafka
-          environment:
-            spring.cloud.stream.kafka.binder:
-              brokers: ${KAFKA_ONBOARDING_OUTCOME_BROKER:${KAFKA_BROKER:}}
-              configuration.sasl.jaas.config: ${KAFKA_ONBOARDING_OUTCOME_SASL_JAAS_CONFIG:}
-        kafka-beneficiary-rule-builder:
-          type: kafka
-          environment:
-            spring.cloud.stream.kafka.binder:
-              brokers: ${KAFKA_BENEFICIARY_RULE_BROKER:${KAFKA_BROKER:}}
-              configuration.sasl.jaas.config: ${KAFKA_BENEFICIARY_RULE_REQUEST_SASL_JAAS_CONFIG:}
-        kafka-errors:
-          type: kafka
-          environment:
-            spring.cloud.stream.kafka.binder:
-              brokers: ${KAFKA_ERRORS_BROKER:${KAFKA_BROKER:}}
-              configuration.sasl.jaas.config: ${KAFKA_ERRORS_SASL_JAAS_CONFIG:}
-      kafka:
-        binder:
-          auto-create-topics: false
-          configuration:
-            heartbeat.interval.ms: ${KAFKA_CONFIG_HEARTBEAT_INTERVAL_MS:30000}
-            session.timeout.ms: ${KAFKA_CONFIG_SESSION_TIMEOUT_MS:60000}
-            request.timeout.ms: ${KAFKA_CONFIG_REQUEST_TIMEOUT_MS:60000}
-            sasl.mechanism: ${KAFKA_CONFIG_SASL_MECHANISM:PLAIN}
-            security.protocol: ${KAFKA_CONFIG_SECURITY_PROTOCOL:SASL_SSL}
-        bindings:
-          beneficiaryRuleBuilderConsumer-in-0:
-            consumer:
-              startOffset: ${KAFKA_BENEFICIARY_RULE_REQUEST_START_OFFSET:${KAFKA_CONSUMER_CONFIG_START_OFFSET:earliest}}
-              autoCommitOffset: ${KAFKA_BENEFICIARY_RULE_REQUEST_AUTO_COMMIT:${KAFKA_CONSUMER_CONFIG_AUTO_COMMIT:true}}
-              enableDlq: ${KAFKA_BENEFICIARY_RULE_REQUEST_ENABLE_DLQ:${KAFKA_CONSUMER_CONFIG_ENABLE_DLQ:false}}
-              dlqName: ${KAFKA_BENEFICIARY_RULE_REQUEST_DLQ_NAME:${KAFKA_CONSUMER_CONFIG_DLQ_NAME:errorTopic}}
-              standardHeaders: ${KAFKA_BENEFICIARY_RULE_REQUEST_STANDARD_HEADERS:${KAFKA_CONSUMER_CONFIG_STANDARD_HEADERS:both}}
-              configuration:
-                max.poll:
-                  records: ${KAFKA_BENEFICIARY_RULE_REQUEST_MAX_POLL_SIZE:${KAFKA_CONSUMER_CONFIG_MAX_POLL_SIZE:500}}
-                  interval.ms: ${KAFKA_BENEFICIARY_RULE_REQUEST_INTERVAL_TIMEOUT_MS:${KAFKA_CONFIG_MAX_POLL_INTERVAL_TIMEOUT_MS:300000}}
-                connections.max.idle.ms: ${KAFKA_BENEFICIARY_RULE_REQUEST_CONNECTIONS_MAX_IDLE_MS:${KAFKA_CONSUMER_CONFIG_CONNECTIONS_MAX_IDLE_MS:300000}}
-                socket.connection.setup.timeout:
-                  max.ms: ${KAFKA_BENEFICIARY_RULE_REQUEST_CONNECTION_TIMEOUT_MAX_MS:${KAFKA_CONSUMER_CONFIG_CONNECTION_TIMEOUT_MAX_MS:200000}}
-                  ms: ${KAFKA_BENEFICIARY_RULE_REQUEST_CONNECTION_TIMEOUT_MS:${KAFKA_CONSUMER_CONFIG_CONNECTION_TIMEOUT_MS:100000}}
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_ERROR_MESSAGE_SERVERS:${KAFKA_SERVERS:localhost:9092}}
+      client-id: ${KAFKA_ERROR_MESSAGE_CLIENT_ID:idpay-errors-recovery}
+      group-id: ${KAFKA_ERROR_MESSAGE_GROUP_ID:idpay-errors-recovery}
+      auto-offset-reset: ${KAFKA_ERROR_MESSAGE_OFFSET_RESET:earliest}
+      enable-auto-commit: ${KAFKA_ERROR_MESSAGE_ENABLE_AUTO_COMMIT:true}
+      heartbeat-interval: ${KAFKA_ERROR_MESSAGE_HEARTBEAT_INTERVAL:20000}
+      security.protocol: ${KAFKA_ERROR_MESSAGE_SECURITY_PROTOCOL:${KAFKA_SECURITY_PROTOCOL:SASL_SSL}}
+      properties:
+        sasl.mechanism: ${KAFKA_ERROR_MESSAGE_SASL_MECHANISM:${KAFKA_SASL_MECHANISM:PLAIN}}
+        sasl.jaas.config: ${KAFKA_ERROR_MESSAGE_SASL_JAAS_CONFIG:${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="Endpoint=sb://cstar-d-idpay-evh-ns-01.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=u0vSrXirmGdpVNJykdOQEqBL/BntZ9uiXg3FP1+sxWw=";}}
+        max.poll:
+          records: ${KAFKA_ERROR_MESSAGE_MAX_POLL_SIZE:500}
+          interval.ms: ${KAFKA_ERROR_MESSAGE_POLL_INTERVAL:60000}
+        request.timeout.ms: ${KAFKA_ERROR_MESSAGE_REQUEST_TIMEOUT:60000}
+        session.timeout.ms: ${KAFKA_ERROR_MESSAGE_SESSION_TIMEOUT:30000}
+        connections.max.idle.ms: ${KAFKA_ERROR_MESSAGE_CONNECTION_MAX_IDLE_TIME:180000}
+        metadata.max.age.ms: ${KAFKA_ERROR_MESSAGE_METADATA_MAX_AGE_INTERVAL:180000}
+    listener:
+      concurrency: ${KAFKA_ERROR_MESSAGE_CONCURRENCY:2}
+      ack-mode: ${KAFKA_ERROR_MESSAGE_ACK_MODE:BATCH}
+      ack-count: ${KAFKA_ERROR_MESSAGE_ACK_COUNT:100}
+      ack-time: ${KAFKA_ERROR_MESSAGE_ACK_TIME:30000}
 
+errorListener:
+  topic: ${KAFKA_ERROR_MESSAGE_TOPIC:idpay-errors}
+  idleInterval:
+    minSeconds: ${ERROR_LISTENER_PAUSE_SECONDS:600}
+    scheduleCheck: ${SCHEDULE_ERROR_LISTENER_RESUME:* */1 * * * ?}
 
 logging:
   level:
