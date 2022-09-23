@@ -57,7 +57,7 @@ import static org.awaitility.Awaitility.await;
                 "logging.level.org.apache.kafka=WARN",
                 "logging.level.kafka=WARN",
                 "logging.level.state.change.logger=WARN",
-                "spring.cloud.stream.kafka.binder.configuration.security.protocol=PLAINTEXT",
+                "spring.kafka.consumer.security.protocol=PLAINTEXT",
                 "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
                 "spring.cloud.stream.kafka.binder.zkNodes=${spring.embedded.zookeeper.connect}",
                 "spring.kafka.consumer.bootstrap-servers=${spring.embedded.kafka.brokers}",
@@ -76,7 +76,7 @@ public abstract class BaseIntegrationTest {
     @Autowired
     protected EmbeddedKafkaBroker kafkaBroker;
     @Autowired
-    protected KafkaTemplate<byte[], byte[]> template;
+    protected KafkaTemplate<String, String> template;
 
     @Autowired
     protected ObjectMapper objectMapper;
@@ -192,7 +192,7 @@ public abstract class BaseIntegrationTest {
                             Stream.of(retryHeader))
                     .collect(Collectors.toList());
         }
-        ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topic, null, key == null ? null : key.getBytes(StandardCharsets.UTF_8), payload.getBytes(StandardCharsets.UTF_8), headers);
+        ProducerRecord<String, String> record = new ProducerRecord<>(topic, null, key, payload, headers);
         template.send(record);
     }
 
