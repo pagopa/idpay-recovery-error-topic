@@ -44,8 +44,12 @@ spring:
         retry.backoff.ms: ${KAFKA_PRODUCER_DEFAULT_KAFKA_RETRY_MS:${KAFKA_RETRY_MS:10000}}
         linger.ms: ${KAFKA_PRODUCER_DEFAULT_LINGER_MS:${KAFKA_LINGER_MS:2}}
         batch.size: ${KAFKA_PRODUCER_DEFAULT_BATCH_SIZE:${KAFKA_BATCH_SIZE:16384}}
-  servicebus:
-    topic-client-id: ${SERVICE_BUS_ERROR_MESSAGE_CLIENT_ID:idpay-errors-recovery}
+  jms:
+    servicebus:
+      connection-string: ${SERVICEBUS_IDPAY_SB_CONNECTION_STRING:Endpoint=sb://ServiceBusEndpoint;SharedAccessKeyName=sharedAccessKeyName;SharedAccessKey=sharedAccessKey}
+      # Specify the pricing tier of your service bus. Supported values are premium, standard, and basic. Premium uses Java Message Service (JMS) 2.0, while standard and basic use JMS 1.0 to interact with Azure Service Bus.
+      pricing-tier: ${SERVICEBUS_IDPAY_SB_PRICING_TIER:standard}
+      topic-client-id: ${SERVICE_BUS_ERROR_MESSAGE_CLIENT_ID:idpay-errors-recovery}
 
 errorListener:
   topic: ${KAFKA_ERROR_MESSAGE_TOPIC:idpay-errors}
