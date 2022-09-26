@@ -2,9 +2,7 @@ package it.gov.pagopa.idpay.error_recovery.service;
 
 import it.gov.pagopa.idpay.error_recovery.producer.Publisher;
 import it.gov.pagopa.idpay.error_recovery.utils.Constants;
-import it.gov.pagopa.idpay.error_recovery.utils.Utils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.header.Header;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
 class ErrorMessagePublisherServiceTest {

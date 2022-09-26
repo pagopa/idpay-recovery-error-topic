@@ -1,6 +1,5 @@
 package it.gov.pagopa.idpay.error_recovery.config;
 
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +24,16 @@ public class HandledPublishersConfig {
     @Setter
     private Map<String, String> servicebus;
 
-    @Getter
-    private Map<String, Map<String, String>> kafkaSrcKey2properties;
-    @Getter
+    private Map<String, Map<String, Object>> kafkaSrcKey2properties;
     private Map<String, Map<String, String>> servicebusSrcKey2properties;
+
+    public Map<String, Object> getKafkaPublisherProperties(String srcServer, String srcTopic){
+        return kafkaSrcKey2properties.get(buildSrcKey(srcServer, srcTopic));
+    }
+
+    public Map<String, String> getServiceBusPublisherProperties(String srcServer, String srcTopic){
+        return servicebusSrcKey2properties.get(buildSrcKey(srcServer, srcTopic));
+    }
 
     public static String buildSrcKey(String srcServer, String srcTopic) {
         return "%s@%s".formatted(srcServer, srcTopic);
@@ -36,7 +41,11 @@ public class HandledPublishersConfig {
 
     @PostConstruct
     void init() {
-        kafkaSrcKey2properties = buildSrcKey2Properties(kafka, sProps->sProps.get("bootstrap-servers"));
+        kafkaSrcKey2properties = buildSrcKey2Properties(kafka, sProps->sProps.get("bootstrap-servers"))
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        server2Props->server2Props.getValue().entrySet().stream()
+                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
         servicebusSrcKey2properties = buildSrcKey2Properties(servicebus, sProps->extractServerFromServiceBusConnectionString(sProps.get("connection-string")));
     }
 
