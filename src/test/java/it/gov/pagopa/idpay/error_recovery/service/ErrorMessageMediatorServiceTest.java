@@ -14,14 +14,14 @@ import java.nio.charset.StandardCharsets;
 
 @ExtendWith({MockitoExtension.class})
 class ErrorMessageMediatorServiceTest {
-    @Mock private PublisherRetrieverService publisherRetrieverServiceMock;
+    @Mock private PublisherFactoryService publisherFactoryServiceMock;
     @Mock private ErrorMessagePublisherService errorMessagePublisherService;
 
     private ErrorMessageMediatorService errorMessageMediatorService;
 
     @BeforeEach
     void init(){
-        errorMessageMediatorService=new ErrorMessageMediatorServiceImpl( publisherRetrieverServiceMock, errorMessagePublisherService);
+        errorMessageMediatorService=new ErrorMessageMediatorServiceImpl(publisherFactoryServiceMock, errorMessagePublisherService);
     }
 
     private static ConsumerRecord<String, String> buildBaseMessage() {
@@ -29,7 +29,7 @@ class ErrorMessageMediatorServiceTest {
     }
 
     @Test
-    void testNotRetriableMessage(){
+    void testNotRetryableMessage(){
         // given
         ConsumerRecord<String, String> message = buildBaseMessage();
         message.headers().add(Constants.ERROR_MSG_HEADER_RETRYABLE, "false".getBytes(StandardCharsets.UTF_8));
@@ -38,7 +38,7 @@ class ErrorMessageMediatorServiceTest {
         errorMessageMediatorService.accept(message);
 
         // Then
-        Mockito.verifyNoInteractions(publisherRetrieverServiceMock, errorMessagePublisherService);
+        Mockito.verifyNoInteractions(publisherFactoryServiceMock, errorMessagePublisherService);
     }
 
     @Test
@@ -47,15 +47,15 @@ class ErrorMessageMediatorServiceTest {
         ConsumerRecord<String, String> message = buildBaseMessage();
         message.headers().add(Constants.ERROR_MSG_HEADER_RETRYABLE, "true".getBytes(StandardCharsets.UTF_8));
 
-        Mockito.when(publisherRetrieverServiceMock.retrievePublisher(message.headers())).thenReturn(null);
+        Mockito.when(publisherFactoryServiceMock.retrievePublisher(message.headers())).thenReturn(null);
 
         // when
         errorMessageMediatorService.accept(message);
 
         // Then
-        Mockito.verify(publisherRetrieverServiceMock).retrievePublisher(message.headers());
+        Mockito.verify(publisherFactoryServiceMock).retrievePublisher(message.headers());
 
-        Mockito.verifyNoMoreInteractions(publisherRetrieverServiceMock);
+        Mockito.verifyNoMoreInteractions(publisherFactoryServiceMock);
         Mockito.verifyNoInteractions(errorMessagePublisherService);
     }
 
@@ -67,15 +67,15 @@ class ErrorMessageMediatorServiceTest {
 
         Publisher publisher = Mockito.mock(Publisher.class);
 
-        Mockito.when(publisherRetrieverServiceMock.retrievePublisher(message.headers())).thenReturn(publisher);
+        Mockito.when(publisherFactoryServiceMock.retrievePublisher(message.headers())).thenReturn(publisher);
 
         // when
         errorMessageMediatorService.accept(message);
 
         // Then
-        Mockito.verify(publisherRetrieverServiceMock).retrievePublisher(message.headers());
+        Mockito.verify(publisherFactoryServiceMock).retrievePublisher(message.headers());
         Mockito.verify(errorMessagePublisherService).publish(message.headers(), message.value(), publisher);
 
-        Mockito.verifyNoMoreInteractions(publisherRetrieverServiceMock, errorMessagePublisherService);
+        Mockito.verifyNoMoreInteractions(publisherFactoryServiceMock, errorMessagePublisherService);
     }
 }

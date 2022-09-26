@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ErrorMessageMediatorServiceImpl implements ErrorMessageMediatorService {
 
-    private final PublisherRetrieverService publisherRetrieverService;
+    private final PublisherFactoryService publisherFactoryService;
     private final ErrorMessagePublisherService errorMessagePublisherService;
 
-    public ErrorMessageMediatorServiceImpl(PublisherRetrieverService publisherRetrieverService, ErrorMessagePublisherService errorMessagePublisherService) {
-        this.publisherRetrieverService = publisherRetrieverService;
+    public ErrorMessageMediatorServiceImpl(PublisherFactoryService publisherFactoryService, ErrorMessagePublisherService errorMessagePublisherService) {
+        this.publisherFactoryService = publisherFactoryService;
         this.errorMessagePublisherService = errorMessagePublisherService;
     }
 
@@ -25,11 +25,11 @@ public class ErrorMessageMediatorServiceImpl implements ErrorMessageMediatorServ
         Headers headers = message.headers();
         String payload = message.value();
 
-        String retriable = Utils.readHeaderValue(headers, Constants.ERROR_MSG_HEADER_RETRYABLE);
-        if(retriable != null && !"true".equalsIgnoreCase(retriable)){
-            log.info("[ERROR_MESSAGE_HANDLER] message configured as not retriable: {}; {}", Utils.toString(headers), payload);
+        String retryable = Utils.readHeaderValue(headers, Constants.ERROR_MSG_HEADER_RETRYABLE);
+        if(retryable != null && !"true".equalsIgnoreCase(retryable)){
+            log.info("[ERROR_MESSAGE_HANDLER] message configured as not retryable: {}; {}", Utils.toString(headers), payload);
         } else {
-            Publisher publisher = publisherRetrieverService.retrievePublisher(headers);
+            Publisher publisher = publisherFactoryService.retrievePublisher(headers);
 
             if (publisher != null) {
                 errorMessagePublisherService.publish(headers, payload, publisher);
