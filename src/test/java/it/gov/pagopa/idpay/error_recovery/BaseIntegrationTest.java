@@ -32,7 +32,6 @@ import org.springframework.test.context.TestPropertySource;
 import javax.annotation.PostConstruct;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
-import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,12 +142,6 @@ public abstract class BaseIntegrationTest {
                         """,
                 "bootstrapServers: %s, zkNodes: %s".formatted(kafkaBootstrapServers, zkNodes));
     }
-
-//    @Test TODO
-//    void testHealthIndicator(){
-//        Health health = streamsHealthIndicator.health();
-//        Assertions.assertEquals(Status.UP, health.getStatus());
-//    }
 
     protected Consumer<String, String> getEmbeddedKafkaConsumer(String topic, String groupId) {
         if (!kafkaBroker.getTopics().contains(topic)) {

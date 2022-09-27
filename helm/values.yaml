@@ -64,9 +64,6 @@ microservice-chart:
   envSecret:
     #    APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-instrumentation-key
     KAFKA_ERRORS_SASL_JAAS_CONFIG: evh-idpay-errors-idpay-errors-consumer-jaas-config-idpay-01
-    # IDPAY_EVENTHUB_00_SASL_JAAS_CONFIG: TODO
-    # IDPAY_EVENTHUB_01_SASL_JAAS_CONFIG: TODO
-    # RTD_EVENTHUB_SASL_JAAS_CONFIG: TODO
     SERVICEBUS_ONBOARDING_CONNECTION_STRING: idpay-onboarding-request-processor-sas-key
 
     # if we cannot use high level keys, we should configure each of them
