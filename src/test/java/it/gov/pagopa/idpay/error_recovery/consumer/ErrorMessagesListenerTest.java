@@ -77,13 +77,13 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
         configurePublisherSpies();
 
         int kafkaMessage2recover = Math.max(10, kafkaRecoveryTopics.size()*2); // Configure even number
-        int serviceBusMessage2recover = 0;// TODO Math.max(2, serviceBusRecoveryTopics.size());
+        int serviceBusMessage2recover = Math.max(2, serviceBusRecoveryTopics.size());
         int messageNotRetriable = 5;
         int messageMaxRetried = 5;
         int messageNotRecoverable = 1;
 
         List<Triple<Headers, String, String>> msgs = new ArrayList<>(IntStream.range(0, kafkaMessage2recover/2).mapToObj(this::buildKafkaMessage2Recover).toList());
-//        msgs.addAll(IntStream.range(msgs.size(), msgs.size() + serviceBusMessage2recover).mapToObj(this::buildServiceBusMessage2Recover).toList()); TODO
+        msgs.addAll(IntStream.range(msgs.size(), msgs.size() + serviceBusMessage2recover).mapToObj(this::buildServiceBusMessage2Recover).toList());
         msgs.addAll(IntStream.range(msgs.size(), msgs.size() + messageNotRetriable).mapToObj(this::buildMessageNotRetriable).toList());
         msgs.addAll(IntStream.range(msgs.size(), msgs.size() + messageMaxRetried).mapToObj(this::buildMessageMaxRetried).toList());
         msgs.addAll(IntStream.range(msgs.size(), msgs.size() + messageNotRecoverable).mapToObj(this::buildMessageNotRecoverable).toList());
@@ -106,7 +106,7 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
         long time2WaitKafkaRecoveredMessages = System.currentTimeMillis();
 
         Assertions.assertEquals(kafkaRecoveryTopics.size(), kafkaPublisherSpies.size());
-//        Assertions.assertEquals(serviceBusRecoveryTopics.size(), jmsPublisherMocks.size()); TODO
+        Assertions.assertEquals(serviceBusRecoveryTopics.size(), jmsPublisherMocks.size());
 
         checkPublishedMessages(kafkaMessage2recover, serviceBusMessage2recover, lastHalfKafkaMessagesIndex);
         long time2checkpayloads = System.currentTimeMillis() - timePublishingOnboardingRequest;
