@@ -62,7 +62,11 @@ public class HandledPublishersConfig {
         servicebusSrcKey2properties = buildSrcKey2Properties(
                 servicebus,
                 sProps->extractServerFromServiceBusConnectionString(sProps.get("connection-string")),
-                (dProps, destination)->{});
+                (dProps, destination)->{
+                    if(!dProps.containsKey("topic-client-id")){
+                        dProps.put("topic-client-id", "%s-%s".formatted(defaultClientId, destination));
+                    }
+                });
     }
 
     private Map<String, Map<String, String>> buildSrcKey2Properties(Map<String, String> props, Function<Map<String, String>, String> serverProps2ServerHost, BiConsumer<Map<String, String>, String> configureDefaultProps) {

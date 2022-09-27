@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 @TestPropertySource(properties = {
-        "errorListener.idleInterval.minSeconds=6", // to configure in order to be > "Time spent to wait publishing kafka messages"
+        "errorListener.idleInterval.minSeconds=7", // to configure in order to be > "Time spent to wait publishing kafka messages"
         "logging.level.it.gov.pagopa.idpay.error_recovery.service.ErrorMessageMediatorServiceImpl=WARN",
         "logging.level.it.gov.pagopa.idpay.error_recovery.service.ErrorMessagePublisherServiceImpl=WARN",
 })
@@ -109,7 +109,7 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
         Assertions.assertEquals(serviceBusRecoveryTopics.size(), jmsPublisherMocks.size());
 
         checkPublishedMessages(kafkaMessage2recover, serviceBusMessage2recover, lastHalfKafkaMessagesIndex);
-        long time2checkpayloads = System.currentTimeMillis() - timePublishingOnboardingRequest;
+        long time2checkpayloads = System.currentTimeMillis() - time2WaitKafkaRecoveredMessages;
 
         System.out.printf("""
                         ************************
@@ -130,7 +130,7 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
                 time2checkpayloads
         );
 
-        Awaitility.await().atLeast(pauseLength*1000-(System.currentTimeMillis()-secondLaunchTime), TimeUnit.MILLISECONDS)
+        Awaitility.await().atLeast(pauseLength*1000-(System.currentTimeMillis()-secondLaunchTime)-500, TimeUnit.MILLISECONDS)
                 .atMost(1, TimeUnit.MINUTES)
                 .until(()->countKafkaPublisherInvocations() == kafkaMessage2recover+1);
         long timeEnd = System.currentTimeMillis();
@@ -248,7 +248,7 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
     private void checkKafkaRecoveredMessage(Message<String> recoveredMessage, int kafkaMessage2recover, int lastHalfKafkaMessagesIndex) {
         int bias = Integer.parseInt(recoveredMessage.getPayload());
 
-        Assertions.assertTrue(bias >= 0 && (bias < kafkaMessage2recover || bias >= lastHalfKafkaMessagesIndex));
+        Assertions.assertTrue(bias >= 0 && (bias < kafkaMessage2recover/2 || bias >= lastHalfKafkaMessagesIndex), "Unexpected message handled as kafka: %d".formatted(bias));
 
         checkRecoveredMessage(recoveredMessage, bias);
     }
@@ -256,7 +256,8 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
     private void checkServiceBusRecoveredMessage(Message<String> recoveredMessage, int kafkaMessage2recover, int servicebusMessage2recover) {
         int bias = Integer.parseInt(recoveredMessage.getPayload());
 
-        Assertions.assertTrue(bias >= kafkaMessage2recover && bias < (kafkaMessage2recover+servicebusMessage2recover));
+        int firstServiceBusMessageIndex = kafkaMessage2recover / 2;
+        Assertions.assertTrue(bias >= firstServiceBusMessageIndex && bias < (firstServiceBusMessageIndex +servicebusMessage2recover), "Unexpected message handled as servicebus: %d".formatted(bias));
 
         checkRecoveredMessage(recoveredMessage, bias);
     }

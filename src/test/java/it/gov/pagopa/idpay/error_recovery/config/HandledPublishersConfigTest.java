@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
+
 @TestPropertySource(
         properties = {
                 "handled-publishers.kafka.idpay-evh-ns-00.properties.bootstrap.servers=localhost:9092",
@@ -60,8 +61,9 @@ class HandledPublishersConfigTest extends BaseIntegrationTest {
     void testServiceBusConfig() {
         Assertions.assertEquals(
                 Map.of(
-                                "connection-string", "Endpoint=sb://ServiceBusEndpoint;SharedAccessKeyName=sharedAccessKeyName;SharedAccessKey=sharedAccessKey;EntityPath=entityPath"),
-                config.getServiceBusPublisherProperties("ServiceBusEndpoint","idpay-onboarding-request"));
+                        "connection-string", "Endpoint=sb://ServiceBusEndpoint;SharedAccessKeyName=sharedAccessKeyName;SharedAccessKey=sharedAccessKey;EntityPath=entityPath",
+                        "topic-client-id", "idpay-errors-recovery-idpay-onboarding-request"),
+                config.getServiceBusPublisherProperties("ServiceBusEndpoint", "idpay-onboarding-request"));
 
         Assertions.assertNull(config.getKafkaPublisherProperties("DUMMY", "idpay-onboarding-request"));
         Assertions.assertNull(config.getKafkaPublisherProperties("ServiceBusEndpoint", "DUMMY"));
