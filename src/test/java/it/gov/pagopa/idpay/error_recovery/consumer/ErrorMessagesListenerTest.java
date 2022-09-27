@@ -11,6 +11,7 @@ import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.header.internals.RecordHeaders;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,10 +22,11 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 @TestPropertySource(properties = {
-        "errorListener.idleInterval.minSeconds=5",
+        "errorListener.idleInterval.minSeconds=6", // to configure in order to be > "Time spent to wait publishing kafka messages"
         "logging.level.it.gov.pagopa.idpay.error_recovery.service.ErrorMessageMediatorServiceImpl=WARN",
         "logging.level.it.gov.pagopa.idpay.error_recovery.service.ErrorMessagePublisherServiceImpl=WARN",
 })
@@ -115,7 +117,6 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
                         Time spent to wait publish invocations: %d millis
                         Time spent to wait publishing kafka messages: %d millis
                         Time spent to check payloads: %d millis
-                        ************************
                         """,
                 msgs.size(),
                 kafkaMessage2recover,
@@ -126,16 +127,17 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
                 timePublishingOnboardingRequest - timePublishOnboardingStart,
                 time2WaitSpiesPublishInvocation,
                 time2WaitKafkaRecoveredMessages - timePublishingOnboardingRequest,
-                time2checkpayloads - time2WaitKafkaRecoveredMessages
+                time2checkpayloads
         );
 
-        waitPublisherInvocations(kafkaMessage2recover+1, serviceBusMessage2recover, 1, (int)pauseLength*1000);
-        //TODO check paused
+        Awaitility.await().atLeast(pauseLength*1000-(System.currentTimeMillis()-secondLaunchTime), TimeUnit.MILLISECONDS)
+                .atMost(1, TimeUnit.MINUTES)
+                .until(()->countKafkaPublisherInvocations() == kafkaMessage2recover+1);
         long timeEnd = System.currentTimeMillis();
 
         System.out.printf("""
                         ************************
-                        Time occurred to process message send after first sleep (pause length %d millis): %d millis
+                        Time occurred to process message send after first sleep (pause length %d seconds): %d millis
                         ************************
                         Test Completed in %d millis
                         ************************
@@ -145,7 +147,7 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
                 timeEnd - timePublishOnboardingStart
         );
 
-        checkCommittedOffsets(topicErrors, groupIdtopicErrors, msgs.size());
+        checkCommittedOffsets(topicErrors, groupIdtopicErrors, msgs.size()+1);
     }
 
     //region messages build
@@ -218,17 +220,18 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
     }
 
     private void waitPublisherInvocations(int kafkaMessage2recover, int serviceBusMessage2recover) {
-        waitPublisherInvocations(kafkaMessage2recover, serviceBusMessage2recover, 10, 1000);
-    }
-    private void waitPublisherInvocations(int kafkaMessage2recover, int serviceBusMessage2recover, int maxAttempts, int millisAttemptDelay) {
         final long[] kafkaRecoveredMessages = new long[]{0};
         final long[] jmsRecoveredMessages = new long[]{0};
         waitFor(()->{
-                    kafkaRecoveredMessages[0] = kafkaPublisherSpies.stream().mapToLong(spy -> Mockito.mockingDetails(spy).getInvocations().size()).sum();
+                    kafkaRecoveredMessages[0] = countKafkaPublisherInvocations();
                     jmsRecoveredMessages[0] = jmsPublisherMocks.stream().mapToLong(spy -> Mockito.mockingDetails(spy).getInvocations().size()).sum();
                     return kafkaRecoveredMessages[0]== kafkaMessage2recover && jmsRecoveredMessages[0]== serviceBusMessage2recover;
                 }, () -> "Sending %d kafka messages instead of %d; Sending %d service bus messages instead of %d".formatted(kafkaRecoveredMessages[0], kafkaMessage2recover, jmsRecoveredMessages[0], serviceBusMessage2recover),
-                maxAttempts, millisAttemptDelay);
+                10, 1000);
+    }
+
+    private long countKafkaPublisherInvocations() {
+        return kafkaPublisherSpies.stream().mapToLong(spy -> Mockito.mockingDetails(spy).getInvocations().size()).sum();
     }
     //endregion
 

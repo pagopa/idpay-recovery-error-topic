@@ -2,50 +2,45 @@ package it.gov.pagopa.idpay.error_recovery.consumer;
 
 import it.gov.pagopa.idpay.error_recovery.service.ErrorMessageMediatorService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.listener.BatchAcknowledgingConsumerAwareMessageListener;
+import org.springframework.kafka.listener.BatchAcknowledgingMessageListener;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.support.Acknowledgment;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Slf4j
-@Service
-public class ErrorMessagesListener implements BatchAcknowledgingConsumerAwareMessageListener<String, String> {
+public class ErrorMessagesListener implements BatchAcknowledgingMessageListener<String, String> {
 
     private final Long pauseLength;
+    private final ConcurrentMessageListenerContainer<String, String> container;
 
-    private Consumer<?, ?> consumer;
     private final ErrorMessageMediatorService errorMessageMediatorService;
 
     private LocalDateTime paused=LocalDateTime.now();
 
-
     public ErrorMessagesListener(
-            @Value("${errorListener.idleInterval.minSeconds}") Long pauseLength,
+            Long pauseLength,
+            ConcurrentMessageListenerContainer<String, String> container,
             ErrorMessageMediatorService errorMessageMediatorService) {
         this.pauseLength = pauseLength;
+        this.container = container;
         this.errorMessageMediatorService = errorMessageMediatorService;
     }
 
-    @Scheduled(cron = "${errorListener.idleInterval.scheduleCheck}")
     public void scheduledResume(){
-        if( paused.until(LocalDateTime.now(), ChronoUnit.SECONDS)>= pauseLength && consumer != null){
-            consumer.resume(consumer.assignment());
+        if( paused.until(LocalDateTime.now(), ChronoUnit.SECONDS)>= pauseLength){
+            container.resume();
         }
     }
 
     @Override
-    public void onMessage(List<ConsumerRecord<String, String>> records, Acknowledgment acknowledgment, Consumer<?, ?> consumer) {
+    public void onMessage(List<ConsumerRecord<String, String>> records, Acknowledgment acknowledgment) {
         if(pauseLength>0){
             paused = LocalDateTime.now();
-            consumer.pause(consumer.assignment());
-            this.consumer=consumer;
+            container.pause();
         }
 
         for (ConsumerRecord<String, String> r : records) {
