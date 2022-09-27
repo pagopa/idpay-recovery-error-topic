@@ -39,7 +39,7 @@ spring:
       properties:
         sasl.mechanism: ${KAFKA_PRODUCER_DEFAULT_SASL_MECHANISM:${KAFKA_SASL_MECHANISM:PLAIN}}
         sasl.jaas.config: ${KAFKA_PRODUCER_DEFAULT_SASL_JAAS_CONFIG:${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="${KAFKA_ERROR_MESSAGE_CONNECTION_STRING:}";}}
-        session.timeout.ms: ${KAFKA_PRODUCER_DEFAULT_SESSION_TIMEOUT:30000}
+        request.timeout.ms: ${KAFKA_PRODUCER_DEFAULT_REQUEST_TIMEOUT:30000}
         connections.max.idle.ms: ${KAFKA_PRODUCER_DEFAULT_CONNECTION_MAX_IDLE_TIME:180000}
         retry.backoff.ms: ${KAFKA_PRODUCER_DEFAULT_KAFKA_RETRY_MS:${KAFKA_RETRY_MS:10000}}
         linger.ms: ${KAFKA_PRODUCER_DEFAULT_LINGER_MS:${KAFKA_LINGER_MS:2}}

@@ -1,5 +1,6 @@
 package it.gov.pagopa.idpay.error_recovery;
 
+import com.azure.spring.cloud.autoconfigure.kafka.AzureEventHubsKafkaOAuth2AutoConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -31,7 +33,6 @@ import javax.annotation.PostConstruct;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +47,14 @@ import java.util.stream.StreamSupport;
 import static org.awaitility.Awaitility.await;
 
 @SpringBootTest
-//@EnableAutoConfiguration(exclude = AzureEventHubsKafkaOAuth2AutoConfiguration.class)
+@EnableAutoConfiguration(exclude = AzureEventHubsKafkaOAuth2AutoConfiguration.class)
 @EmbeddedKafka(topics = {
         "${errorListener.topic}",
+        "idpay-onboarding-outcome",
+        "idpay-hpan-update",
+        "idpay-rule-update",
+        "idpay-transaction",
+        "idpay-transaction-user-id-splitter",
 }, controlledShutdown = true)
 @TestPropertySource(
         properties = {
@@ -58,9 +64,12 @@ import static org.awaitility.Awaitility.await;
                 "logging.level.kafka=WARN",
                 "logging.level.state.change.logger=WARN",
                 "spring.kafka.consumer.security.protocol=PLAINTEXT",
-                "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
+                "spring.kafka.producer.security.protocol=PLAINTEXT",
                 "spring.cloud.stream.kafka.binder.zkNodes=${spring.embedded.zookeeper.connect}",
+                "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
                 "spring.kafka.consumer.bootstrap-servers=${spring.embedded.kafka.brokers}",
+                "handled-publishers.kafka.idpay-evh-ns-00.properties.bootstrap.servers=${spring.embedded.kafka.brokers}",
+                "handled-publishers.kafka.idpay-evh-ns-01.properties.bootstrap.servers=${spring.embedded.kafka.brokers}",
                 //endregion
 
                 //region service bus
@@ -85,10 +94,31 @@ public abstract class BaseIntegrationTest {
     protected String kafkaBootstrapServers;
     @Value("${spring.cloud.stream.kafka.binder.zkNodes}")
     private String zkNodes;
+
     protected String serviceBusServers = "ServiceBusEndpoint";
 
     @Value("${errorListener.topic}")
     protected String topicErrors;
+    @Value("${spring.kafka.consumer.group-id}")
+    protected String groupIdtopicErrors;
+
+    @Value("${errorListener.idleInterval.minSeconds}")
+    protected long pauseLength;
+
+    @Value("${app.retry.max-retry}")
+    protected int maxRetries;
+
+    protected final List<String> kafkaRecoveryTopics=List.of(
+            "idpay-onboarding-outcome",
+            "idpay-hpan-update",
+            "idpay-rule-update",
+            "idpay-transaction",
+            "idpay-transaction-user-id-splitter"
+    );
+
+    protected final List<String> serviceBusRecoveryTopics=List.of(
+            "idpay-onboarding-request"
+    );
 
     @BeforeAll
     public static void unregisterPreviouslyKafkaServers() throws MalformedObjectNameException, MBeanRegistrationException, InstanceNotFoundException {
@@ -105,7 +135,7 @@ public abstract class BaseIntegrationTest {
     }
 
     @PostConstruct
-    public void logEmbeddedServerConfig() throws NoSuchFieldException, UnknownHostException {
+    public void logEmbeddedServerConfig() {
         System.out.printf("""
                         ************************
                         Embedded kafka: %s
@@ -243,6 +273,7 @@ public abstract class BaseIntegrationTest {
             await()
                     .pollInterval(millisAttemptDelay, TimeUnit.MILLISECONDS)
                     .atMost((long) maxAttempts * millisAttemptDelay, TimeUnit.MILLISECONDS)
+                    .timeout(((long)maxAttempts * millisAttemptDelay)+10, TimeUnit.MILLISECONDS)
                     .until(test);
         } catch (RuntimeException e) {
             Assertions.fail(buildTestFailureMessage.get(), e);

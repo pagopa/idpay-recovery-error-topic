@@ -23,6 +23,7 @@ public class ErrorMessageMediatorServiceImpl implements ErrorMessageMediatorServ
     @Override
     public void accept(ConsumerRecord<String, String> message) {
         Headers headers = message.headers();
+        String key = message.key();
         String payload = message.value();
 
         String retryable = Utils.readHeaderValue(headers, Constants.ERROR_MSG_HEADER_RETRYABLE);
@@ -32,7 +33,7 @@ public class ErrorMessageMediatorServiceImpl implements ErrorMessageMediatorServ
             Publisher publisher = publisherFactoryService.retrievePublisher(headers);
 
             if (publisher != null) {
-                errorMessagePublisherService.publish(headers, payload, publisher);
+                errorMessagePublisherService.publish(headers, key, payload, publisher);
             } else {
                 log.info("[ERROR_MESSAGE_HANDLER] srcType/srcServer/srcTopic not configured! {}; {}", Utils.toString(headers), payload);
             }

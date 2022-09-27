@@ -7,13 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -28,13 +29,13 @@ public class ErrorMessagePublisherServiceImpl implements ErrorMessagePublisherSe
     }
 
     @Override
-    public void publish(Headers headers, String payload, Publisher publisher) {
+    public void publish(Headers headers, String key, String payload, Publisher publisher) {
         long retry = getNextRetry(headers);
         if (maxRetry <= 0 || retry <= maxRetry) {
             log.info("[ERROR_MESSAGE_HANDLER] Resubmitting message: {}; {}", Utils.toString(headers), payload);
             cleanHeaders(headers);
             headers.add(Constants.ERROR_MSG_HEADER_RETRY, (retry + "").getBytes(StandardCharsets.UTF_8));
-            publisher.send(buildMessage(headers, payload));
+            publisher.send(buildMessage(headers, key, payload));
         } else {
             log.info("[ERROR_MESSAGE_HANDLER] Max retry reached for message: {}; {}", Utils.toString(headers), payload);
         }
@@ -62,11 +63,13 @@ public class ErrorMessagePublisherServiceImpl implements ErrorMessagePublisherSe
         headers.remove(Constants.ERROR_MSG_HEADER_RETRY);
     }
 
-    private static Message<String> buildMessage(Headers headers, String payload) {
+    private static Message<String> buildMessage(Headers headers, String key, String payload) {
+        Map<String, Object> headersMap = StreamSupport.stream(headers.spliterator(), false)
+                .collect(Collectors.toMap(Header::key, Header::value));
+        if(key!=null){
+            headersMap.put(KafkaHeaders.MESSAGE_KEY, key);
+        }
         return MessageBuilder.createMessage(payload,
-                new MessageHeaders(
-                        StreamSupport.stream(headers.spliterator(), false)
-                                .collect(Collectors.toMap(Header::key, Header::value))
-                ));
+                new MessageHeaders(headersMap));
     }
 }

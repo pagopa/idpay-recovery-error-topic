@@ -1,6 +1,7 @@
 package it.gov.pagopa.idpay.error_recovery.config;
 
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -10,6 +11,7 @@ import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +25,9 @@ public class HandledPublishersConfig {
     private Map<String, String> kafka;
     @Setter
     private Map<String, String> servicebus;
+
+    @Value("${spring.kafka.client-id}")
+    private String defaultClientId;
 
     private Map<String, Map<String, Object>> kafkaSrcKey2properties;
     private Map<String, Map<String, String>> servicebusSrcKey2properties;
@@ -41,21 +46,33 @@ public class HandledPublishersConfig {
 
     @PostConstruct
     void init() {
-        kafkaSrcKey2properties = buildSrcKey2Properties(kafka, sProps->sProps.get("bootstrap-servers"))
+        kafkaSrcKey2properties = buildSrcKey2Properties(
+                kafka,
+                sProps->sProps.get("bootstrap.servers"),
+                (dProps, destination)->{
+                    if(!dProps.containsKey("client.id")){
+                        dProps.put("client.id", "%s-%s".formatted(defaultClientId, destination));
+                    }
+                }
+                )
                 .entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         server2Props->server2Props.getValue().entrySet().stream()
                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
-        servicebusSrcKey2properties = buildSrcKey2Properties(servicebus, sProps->extractServerFromServiceBusConnectionString(sProps.get("connection-string")));
+        servicebusSrcKey2properties = buildSrcKey2Properties(
+                servicebus,
+                sProps->extractServerFromServiceBusConnectionString(sProps.get("connection-string")),
+                (dProps, destination)->{});
     }
 
-    private Map<String, Map<String, String>> buildSrcKey2Properties(Map<String, String> props, Function<Map<String, String>, String> serverProps2ServerHost) {
+    private Map<String, Map<String, String>> buildSrcKey2Properties(Map<String, String> props, Function<Map<String, String>, String> serverProps2ServerHost, BiConsumer<Map<String, String>, String> configureDefaultProps) {
         Map<String, Map<String, String>> serverProperties = new HashMap<>();
         Map<String, Map<String, String>> destinationProperties = new HashMap<>();
 
         String tmpKeyServerName = "serverName";
         String tmpKeyServerHost = "serverHost";
         String tmpKeyDestinationName = "destinationName";
+
         props.forEach((key, value) -> {
             String[] propSplitted = key.split("\\.");
 
@@ -92,8 +109,11 @@ public class HandledPublishersConfig {
                         },
                         e -> {
                             String serverName = e.getValue().get(tmpKeyServerName);
+                            String destination = e.getValue().get(tmpKeyDestinationName);
                             Map<String,String> dProps = new HashMap<>(serverProperties.get(serverName));
                             dProps.putAll(e.getValue());
+                            configureDefaultProps.accept(dProps, destination);
+
                             dProps.remove(tmpKeyServerName);
                             dProps.remove(tmpKeyServerHost);
                             dProps.remove(tmpKeyDestinationName);

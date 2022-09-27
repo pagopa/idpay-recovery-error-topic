@@ -74,7 +74,7 @@ class ErrorMessageMediatorServiceTest {
 
         // Then
         Mockito.verify(publisherFactoryServiceMock).retrievePublisher(message.headers());
-        Mockito.verify(errorMessagePublisherService).publish(message.headers(), message.value(), publisher);
+        Mockito.verify(errorMessagePublisherService).publish(message.headers(), message.key(), message.value(), publisher);
 
         Mockito.verifyNoMoreInteractions(publisherFactoryServiceMock, errorMessagePublisherService);
     }

@@ -43,7 +43,7 @@ class ErrorMessagePublisherServiceTest {
         message.headers().add(Constants.ERROR_MSG_HEADER_STACKTRACE, "STACKTRACE".getBytes(StandardCharsets.UTF_8));
 
         // When
-        errorMessagePublisherService.publish(message.headers(), message.value(), publisherMock);
+        errorMessagePublisherService.publish(message.headers(), message.key(), message.value(), publisherMock);
 
         // Then
         verifyPublishedMessage(message, 1, 1);
@@ -56,7 +56,7 @@ class ErrorMessagePublisherServiceTest {
         message.headers().add("DUMMY", "DUMMY".getBytes(StandardCharsets.UTF_8));
 
         // When
-        errorMessagePublisherService.publish(message.headers(), message.value(), publisherMock);
+        errorMessagePublisherService.publish(message.headers(), message.key(), message.value(), publisherMock);
 
         // Then
         verifyPublishedMessage(message, 2, 6);
@@ -78,7 +78,7 @@ class ErrorMessagePublisherServiceTest {
         ConsumerRecord<String, String> message = buildBaseMessageWithRetry(10);
 
         // When
-        errorMessagePublisherService.publish(message.headers(), message.value(), publisherMock);
+        errorMessagePublisherService.publish(message.headers(), message.key(), message.value(), publisherMock);
 
         // Then
         Mockito.verifyNoInteractions(publisherMock);
