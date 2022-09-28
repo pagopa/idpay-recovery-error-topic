@@ -130,7 +130,7 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
                 time2checkpayloads
         );
 
-        Awaitility.await().atLeast(pauseLength*1000-(System.currentTimeMillis()-secondLaunchTime)-500, TimeUnit.MILLISECONDS)
+        Awaitility.await().atLeast(pauseLength*1000-(System.currentTimeMillis()-secondLaunchTime)-600, TimeUnit.MILLISECONDS)
                 .atMost(1, TimeUnit.MINUTES)
                 .until(()->countKafkaPublisherInvocations() == kafkaMessage2recover+1);
         long timeEnd = System.currentTimeMillis();

@@ -40,6 +40,10 @@ class ErrorMessagePublisherServiceTest {
         message.headers().add(Constants.ERROR_MSG_HEADER_SRC_TOPIC, "SRC_TOPIC".getBytes(StandardCharsets.UTF_8));
         message.headers().add(Constants.ERROR_MSG_HEADER_DESCRIPTION, "DESCRIPTION".getBytes(StandardCharsets.UTF_8));
         message.headers().add(Constants.ERROR_MSG_HEADER_RETRYABLE, "RETRYABLE".getBytes(StandardCharsets.UTF_8));
+        message.headers().add(Constants.ERROR_MSG_HEADER_ROOT_CAUSE_CLASS, "ROOT_CAUSE_CLASS".getBytes(StandardCharsets.UTF_8));
+        message.headers().add(Constants.ERROR_MSG_HEADER_ROOT_CAUSE_MESSAGE, "ROOT_CAUSE_MESSAGE".getBytes(StandardCharsets.UTF_8));
+        message.headers().add(Constants.ERROR_MSG_HEADER_CAUSE_MESSAGE, "CAUSE_MESSAGE".getBytes(StandardCharsets.UTF_8));
+        message.headers().add(Constants.ERROR_MSG_HEADER_CAUSE_CLASS, "CAUSE_CLASS".getBytes(StandardCharsets.UTF_8));
         message.headers().add(Constants.ERROR_MSG_HEADER_STACKTRACE, "STACKTRACE".getBytes(StandardCharsets.UTF_8));
 
         // When
