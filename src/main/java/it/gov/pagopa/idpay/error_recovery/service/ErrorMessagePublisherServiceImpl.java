@@ -59,13 +59,18 @@ public class ErrorMessagePublisherServiceImpl implements ErrorMessagePublisherSe
         headers.remove(Constants.ERROR_MSG_HEADER_SRC_TOPIC);
         headers.remove(Constants.ERROR_MSG_HEADER_DESCRIPTION);
         headers.remove(Constants.ERROR_MSG_HEADER_RETRYABLE);
+        headers.remove(Constants.ERROR_MSG_HEADER_ROOT_CAUSE_CLASS);
+        headers.remove(Constants.ERROR_MSG_HEADER_ROOT_CAUSE_MESSAGE);
+        headers.remove(Constants.ERROR_MSG_HEADER_CAUSE_MESSAGE);
+        headers.remove(Constants.ERROR_MSG_HEADER_CAUSE_CLASS);
         headers.remove(Constants.ERROR_MSG_HEADER_STACKTRACE);
         headers.remove(Constants.ERROR_MSG_HEADER_RETRY);
+        headers.remove("spring_json_header_types");
     }
 
     private static Message<String> buildMessage(Headers headers, String key, String payload) {
         Map<String, Object> headersMap = StreamSupport.stream(headers.spliterator(), false)
-                .collect(Collectors.toMap(Header::key, Header::value));
+                .collect(Collectors.toMap(Header::key, Header::value, (o1,o2)->o1));
         if(key!=null){
             headersMap.put(KafkaHeaders.MESSAGE_KEY, key);
         }
