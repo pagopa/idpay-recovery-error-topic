@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 @TestPropertySource(properties = {
-        "errorListener.idleInterval.minSeconds=7", // to configure in order to be > "Time spent to wait publishing kafka messages"
+        "errorListener.idleInterval.minSeconds=8", // to configure in order to be > "Time spent to wait publishing kafka messages"
         "logging.level.it.gov.pagopa.idpay.error_recovery.service.ErrorMessageMediatorServiceImpl=WARN",
         "logging.level.it.gov.pagopa.idpay.error_recovery.service.ErrorMessagePublisherServiceImpl=WARN",
 })
