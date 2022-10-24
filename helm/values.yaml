@@ -46,6 +46,7 @@ microservice-chart:
     APPLICATIONINSIGHTS_ROLE_NAME: "idpay-recovery-error-topic"
     APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
     APPLICATIONINSIGHTS_INSTRUMENTATION_MICROMETER_ENABLED: "false"
+    KAFKA_ERROR_MESSAGE_GROUP_ID: "idpay-errors-recovery-group"
 
   envConfigMapExternals:
     idpay-common:
