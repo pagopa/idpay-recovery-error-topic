@@ -13,7 +13,7 @@ spring:
     client-id: ${KAFKA_ERROR_MESSAGE_CLIENT_ID:idpay-errors-recovery}
     consumer:
       bootstrap-servers: ${KAFKA_ERROR_MESSAGE_SERVERS:${KAFKA_SERVERS:localhost:9092}}
-      group-id: ${KAFKA_ERROR_MESSAGE_GROUP_ID:idpay-errors-recovery}
+      group-id: ${KAFKA_ERROR_MESSAGE_GROUP_ID:idpay-errors-recovery-group}
       auto-offset-reset: ${KAFKA_ERROR_MESSAGE_OFFSET_RESET:earliest}
       enable-auto-commit: ${KAFKA_ERROR_MESSAGE_ENABLE_AUTO_COMMIT:true}
       heartbeat-interval: ${KAFKA_ERROR_MESSAGE_HEARTBEAT_INTERVAL:20000}
