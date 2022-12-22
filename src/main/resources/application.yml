@@ -16,18 +16,18 @@ spring:
       group-id: ${KAFKA_ERROR_MESSAGE_GROUP_ID:idpay-errors-recovery-group}
       auto-offset-reset: ${KAFKA_ERROR_MESSAGE_OFFSET_RESET:earliest}
       enable-auto-commit: ${KAFKA_ERROR_MESSAGE_ENABLE_AUTO_COMMIT:true}
-      heartbeat-interval: ${KAFKA_ERROR_MESSAGE_HEARTBEAT_INTERVAL:20000}
+      heartbeat-interval: ${KAFKA_ERROR_MESSAGE_HEARTBEAT_INTERVAL:3000}
       security.protocol: ${KAFKA_ERROR_MESSAGE_SECURITY_PROTOCOL:${KAFKA_SECURITY_PROTOCOL:SASL_SSL}}
       properties:
-        sasl.mechanism: ${KAFKA_ERROR_MESSAGE_SASL_MECHANISM:${KAFKA_SASL_MECHANISM:PLAIN}}
-        sasl.jaas.config: ${KAFKA_ERROR_MESSAGE_SASL_JAAS_CONFIG:${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="${KAFKA_ERROR_MESSAGE_CONNECTION_STRING:}";}}
+        connections.max.idle.ms: ${KAFKA_ERROR_MESSAGE_CONNECTION_MAX_IDLE_TIME:180000}
         max.poll:
           records: ${KAFKA_ERROR_MESSAGE_MAX_POLL_SIZE:500}
           interval.ms: ${KAFKA_ERROR_MESSAGE_POLL_INTERVAL:60000}
-        request.timeout.ms: ${KAFKA_ERROR_MESSAGE_REQUEST_TIMEOUT:60000}
-        session.timeout.ms: ${KAFKA_ERROR_MESSAGE_SESSION_TIMEOUT:30000}
-        connections.max.idle.ms: ${KAFKA_ERROR_MESSAGE_CONNECTION_MAX_IDLE_TIME:180000}
         metadata.max.age.ms: ${KAFKA_ERROR_MESSAGE_METADATA_MAX_AGE_INTERVAL:180000}
+        request.timeout.ms: ${KAFKA_ERROR_MESSAGE_REQUEST_TIMEOUT:60000}
+        sasl.jaas.config: ${KAFKA_ERROR_MESSAGE_SASL_JAAS_CONFIG:${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="${KAFKA_ERROR_MESSAGE_CONNECTION_STRING:}";}}
+        sasl.mechanism: ${KAFKA_ERROR_MESSAGE_SASL_MECHANISM:${KAFKA_SASL_MECHANISM:PLAIN}}
+        session.timeout.ms: ${KAFKA_ERROR_MESSAGE_SESSION_TIMEOUT:30000}
     listener:
       concurrency: ${KAFKA_ERROR_MESSAGE_CONCURRENCY:2}
       ack-mode: ${KAFKA_ERROR_MESSAGE_ACK_MODE:BATCH}
@@ -37,13 +37,16 @@ spring:
       retries: ${KAFKA_PRODUCER_DEFAULT_RETRIES:3}
       security.protocol: ${KAFKA_PRODUCER_DEFAULT_SECURITY_PROTOCOL:${KAFKA_SECURITY_PROTOCOL:SASL_SSL}}
       properties:
-        sasl.mechanism: ${KAFKA_PRODUCER_DEFAULT_SASL_MECHANISM:${KAFKA_SASL_MECHANISM:PLAIN}}
-        sasl.jaas.config: ${KAFKA_PRODUCER_DEFAULT_SASL_JAAS_CONFIG:${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="${KAFKA_ERROR_MESSAGE_CONNECTION_STRING:}";}}
-        request.timeout.ms: ${KAFKA_PRODUCER_DEFAULT_REQUEST_TIMEOUT:30000}
-        connections.max.idle.ms: ${KAFKA_PRODUCER_DEFAULT_CONNECTION_MAX_IDLE_TIME:180000}
-        retry.backoff.ms: ${KAFKA_PRODUCER_DEFAULT_KAFKA_RETRY_MS:${KAFKA_RETRY_MS:10000}}
-        linger.ms: ${KAFKA_PRODUCER_DEFAULT_LINGER_MS:${KAFKA_LINGER_MS:2}}
         batch.size: ${KAFKA_PRODUCER_DEFAULT_BATCH_SIZE:${KAFKA_BATCH_SIZE:16384}}
+        connections.max.idle.ms: ${KAFKA_PRODUCER_DEFAULT_CONNECTION_MAX_IDLE_TIME:180000}
+        max.request.size: ${KAFKA_PRODUCER_DEFAULT_MAX_REQUEST_SIZE:1000000}
+        linger.ms: ${KAFKA_PRODUCER_DEFAULT_LINGER_MS:${KAFKA_LINGER_MS:2}}
+        metadata.max.age.ms: ${KAFKA_PRODUCER_DEFAULT_MAX_AGE_INTERVAL:180000}
+        metadata.max.idle.ms: ${KAFKA_PRODUCER_DEFAULT_MAX_IDLE_MS:180000}
+        request.timeout.ms: ${KAFKA_PRODUCER_DEFAULT_REQUEST_TIMEOUT:30000}
+        retry.backoff.ms: ${KAFKA_PRODUCER_DEFAULT_KAFKA_RETRY_MS:${KAFKA_RETRY_MS:10000}}
+        sasl.jaas.config: ${KAFKA_PRODUCER_DEFAULT_SASL_JAAS_CONFIG:${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="${KAFKA_ERROR_MESSAGE_CONNECTION_STRING:}";}}
+        sasl.mechanism: ${KAFKA_PRODUCER_DEFAULT_SASL_MECHANISM:${KAFKA_SASL_MECHANISM:PLAIN}}
   jms:
     servicebus:
       connection-string: ${SERVICEBUS_IDPAY_SB_CONNECTION_STRING:Endpoint=sb://ServiceBusEndpoint;SharedAccessKeyName=sharedAccessKeyName;SharedAccessKey=sharedAccessKey}
