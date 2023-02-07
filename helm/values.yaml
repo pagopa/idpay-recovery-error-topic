@@ -64,7 +64,6 @@ microservice-chart:
       KAFKA_RTD_BROKER: kafka_broker_rtd
 
   envSecret:
-    #    APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-instrumentation-key
     KAFKA_ERROR_MESSAGE_SASL_JAAS_CONFIG: evh-idpay-errors-idpay-errors-consumer-jaas-config-idpay-01
     SERVICEBUS_IDPAY_SB_CONNECTION_STRING: idpay-onboarding-request-processor-sas-key
     SERVICEBUS_ONBOARDING_CONNECTION_STRING: idpay-onboarding-request-processor-sas-key
