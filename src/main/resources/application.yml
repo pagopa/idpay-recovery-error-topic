@@ -24,7 +24,7 @@ spring:
         max.poll:
           records: ${KAFKA_ERROR_MESSAGE_MAX_POLL_SIZE:500}
           interval.ms: ${KAFKA_ERROR_MESSAGE_POLL_INTERVAL:60000}
-        metadata.max.age.ms: ${KAFKA_ERROR_MESSAGE_METADATA_MAX_AGE_INTERVAL:180000}
+        metadata.max.age.ms: ${KAFKA_ERROR_MESSAGE_METADATA_MAX_AGE_INTERVAL:179000}
         request.timeout.ms: ${KAFKA_ERROR_MESSAGE_REQUEST_TIMEOUT:60000}
         sasl.jaas.config: ${KAFKA_ERROR_MESSAGE_SASL_JAAS_CONFIG:${KAFKA_SASL_JAAS_CONFIG:org.apache.kafka.common.security.plain.PlainLoginModule required username="$ConnectionString" password="${KAFKA_ERROR_MESSAGE_CONNECTION_STRING:}";}}
         sasl.mechanism: ${KAFKA_ERROR_MESSAGE_SASL_MECHANISM:${KAFKA_SASL_MECHANISM:PLAIN}}
@@ -42,7 +42,7 @@ spring:
         connections.max.idle.ms: ${KAFKA_PRODUCER_DEFAULT_CONNECTION_MAX_IDLE_TIME:180000}
         max.request.size: ${KAFKA_PRODUCER_DEFAULT_MAX_REQUEST_SIZE:1000000}
         linger.ms: ${KAFKA_PRODUCER_DEFAULT_LINGER_MS:${KAFKA_LINGER_MS:2}}
-        metadata.max.age.ms: ${KAFKA_PRODUCER_DEFAULT_MAX_AGE_INTERVAL:180000}
+        metadata.max.age.ms: ${KAFKA_PRODUCER_DEFAULT_MAX_AGE_INTERVAL:179000}
         metadata.max.idle.ms: ${KAFKA_PRODUCER_DEFAULT_MAX_IDLE_MS:180000}
         request.timeout.ms: ${KAFKA_PRODUCER_DEFAULT_REQUEST_TIMEOUT:30000}
         retry.backoff.ms: ${KAFKA_PRODUCER_DEFAULT_KAFKA_RETRY_MS:${KAFKA_RETRY_MS:10000}}
