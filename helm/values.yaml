@@ -43,9 +43,10 @@ microservice-chart:
     allowPrivilegeEscalation: false
 
   envConfig:
-    APPLICATIONINSIGHTS_ROLE_NAME: "idpay-recovery-error-topic"
+    APPLICATIONINSIGHTS_ROLE_NAME: "idpayrecoveryerrortopic"
     APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
     APPLICATIONINSIGHTS_INSTRUMENTATION_MICROMETER_ENABLED: "false"
+    APPLICATIONINSIGHTS_PREVIEW_PROFILER_ENABLED: "false"
     KAFKA_ERROR_MESSAGE_GROUP_ID: "idpay-errors-recovery-group"
 
   envConfigMapExternals:
