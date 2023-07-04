@@ -1,7 +1,8 @@
 package it.gov.pagopa.idpay.error_recovery.producer.factory;
 
-import com.azure.spring.cloud.autoconfigure.jms.ServiceBusJmsConnectionFactory;
-import com.azure.spring.cloud.autoconfigure.jms.properties.AzureServiceBusJmsProperties;
+import com.azure.spring.cloud.autoconfigure.implementation.jms.properties.AzureServiceBusJmsProperties;
+import com.azure.spring.cloud.core.implementation.connectionstring.ServiceBusConnectionString;
+import com.azure.spring.jms.ServiceBusJmsConnectionFactory;
 import it.gov.pagopa.idpay.error_recovery.config.HandledPublishersConfig;
 import it.gov.pagopa.idpay.error_recovery.producer.JmsPublisher;
 import org.springframework.jms.core.JmsMessagingTemplate;
@@ -26,7 +27,8 @@ public class JmsPublisherFactoryServiceImpl implements JmsPublisherFactoryServic
 
         if (producerProperties != null) {
             AzureServiceBusJmsProperties properties = buildProperties(defaultServiceBusJmsProperties, producerProperties);
-            ServiceBusJmsConnectionFactory connectionFactory = new ServiceBusJmsConnectionFactory(properties.getUsername(), properties.getPassword(), properties.getRemoteUrl());
+            ServiceBusConnectionString serviceBusConnectionString = new ServiceBusConnectionString(properties.getConnectionString());
+            ServiceBusJmsConnectionFactory connectionFactory = new ServiceBusJmsConnectionFactory(properties.getCredential().getUsername(), properties.getCredential().getPassword(), serviceBusConnectionString.getEndpoint());
             connectionFactory.setClientID(properties.getTopicClientId());
             JmsMessagingTemplate jmsMessagingTemplate = new JmsMessagingTemplate(connectionFactory);
             jmsMessagingTemplate.setDefaultDestinationName(srcTopic);
