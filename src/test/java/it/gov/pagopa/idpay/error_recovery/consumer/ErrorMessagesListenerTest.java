@@ -267,10 +267,10 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
         int expectedRetry;
 
         if(bias % 2 == 0){
-            Assertions.assertEquals(bias + "", recoveredMessage.getHeaders().get(KafkaHeaders.MESSAGE_KEY), "Read message (%d) without expected key".formatted(bias));
+            Assertions.assertEquals(bias + "", recoveredMessage.getHeaders().get(KafkaHeaders.KEY), "Read message (%d) without expected key".formatted(bias));
             expectedRetry=(bias%maxRetries)+1;
         } else {
-            Assertions.assertNull(recoveredMessage.getHeaders().get(KafkaHeaders.MESSAGE_KEY), "Read message (%d) without expected key".formatted(bias));
+            Assertions.assertNull(recoveredMessage.getHeaders().get(KafkaHeaders.KEY), "Read message (%d) without expected key".formatted(bias));
             expectedRetry=1;
         }
 

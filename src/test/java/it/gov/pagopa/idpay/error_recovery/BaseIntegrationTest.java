@@ -1,8 +1,8 @@
 package it.gov.pagopa.idpay.error_recovery;
 
-import com.azure.spring.cloud.autoconfigure.kafka.AzureEventHubsKafkaOAuth2AutoConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -29,7 +29,6 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.TestPropertySource;
 
-import javax.annotation.PostConstruct;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
@@ -46,7 +45,7 @@ import java.util.stream.StreamSupport;
 import static org.awaitility.Awaitility.await;
 
 @SpringBootTest
-@EnableAutoConfiguration(exclude = AzureEventHubsKafkaOAuth2AutoConfiguration.class)
+@EnableAutoConfiguration()
 @EmbeddedKafka(topics = {
         "${errorListener.topic}",
         "idpay-onboarding-outcome",

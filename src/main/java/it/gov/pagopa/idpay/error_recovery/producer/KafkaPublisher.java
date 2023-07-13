@@ -15,9 +15,12 @@ public class KafkaPublisher implements Publisher{
 
     @Override
     public void send(Message<String> message) {
-        kafkaTemplate.send(message).addCallback(
-                r -> log.debug("[ERROR_MESSAGE_HANDLER] message successfully sent to {}", kafkaTemplate.getDefaultTopic()),
-                e -> log.error("[ERROR_MESSAGE_HANDLER] something gone wrong while sending message towards topic {}", kafkaTemplate.getDefaultTopic(), e)
-        );
+        kafkaTemplate.send(message)
+                .thenAccept(r -> log.debug("[ERROR_MESSAGE_HANDLER] message successfully sent to {}", kafkaTemplate.getDefaultTopic()))
+                .exceptionally(e -> {
+                    log.error("[ERROR_MESSAGE_HANDLER] something gone wrong while sending message towards topic {}", kafkaTemplate.getDefaultTopic(), e);
+                    return null;
+                    }
+                );
     }
 }
