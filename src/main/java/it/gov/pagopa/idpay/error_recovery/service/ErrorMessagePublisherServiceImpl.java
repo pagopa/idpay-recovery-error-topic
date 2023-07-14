@@ -72,7 +72,7 @@ public class ErrorMessagePublisherServiceImpl implements ErrorMessagePublisherSe
         Map<String, Object> headersMap = StreamSupport.stream(headers.spliterator(), false)
                 .collect(Collectors.toMap(Header::key, Header::value, (o1,o2)->o1));
         if(key!=null){
-            headersMap.put(KafkaHeaders.MESSAGE_KEY, key);
+            headersMap.put(KafkaHeaders.KEY, key);
         }
         return MessageBuilder.createMessage(payload,
                 new MessageHeaders(headersMap));
