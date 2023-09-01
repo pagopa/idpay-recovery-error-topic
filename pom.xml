@@ -60,7 +60,6 @@
         </dependency>
 
         <!-- Security fixes -->
-        <!-- Security fixes -->
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
