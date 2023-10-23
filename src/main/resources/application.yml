@@ -61,9 +61,19 @@ errorListener:
     minSeconds: ${ERROR_LISTENER_PAUSE_SECONDS:600}
     scheduleCheck: ${SCHEDULE_ERROR_LISTENER_RESUME:* */1 * * * ?}
 
-management.endpoints:
-  web:
-    exposure.include: info, health
+management:
+  endpoint:
+    health:
+      probes.enabled: true
+      group:
+        readiness.include: "*"
+        liveness.include: livenessState,diskSpace,ping,binders,streams
+      logging.slow-indicator-threshold: ${HEALTH_ACTUATOR_LOGGER_TIMEOUT_DURATION:PT1S}
+  endpoints:
+    jmx:
+      exposure.include: "*"
+    web:
+      exposure.include: info, health
 
 logging:
   level:
@@ -78,6 +88,7 @@ logging:
     org.springframework.data: ${LOG_LEVEL_SPRING_DATA:INFO}
     org.springframework.hateoas: ${LOG_LEVEL_SPRING_HATEOAS:INFO}
     org.springframework.boot: ${LOG_LEVEL_SPRING_BOOT:INFO}
+    org.springframework.boot.availability: ${LOG_LEVEL_SPRING_BOOT_AVAILABILITY:DEBUG}
     org.springframework.kafka: ${LOG_LEVEL_SPRING_KAFKA:INFO}
     org.springframework.batch: ${LOG_LEVEL_SPRING_BATCH:INFO}
     io.swagger: ${LOG_LEVEL_IO_SWAGGER:WARN}
