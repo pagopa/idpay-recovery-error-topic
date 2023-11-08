@@ -81,3 +81,4 @@ microservice-chart:
     KAFKA_HPAN_UPDATE_SASL_JAAS_CONFIG: evh-idpay-hpan-update-idpay-hpan-update-producer-jaas-config-idpay-01
     KAFKA_ONBOARDING_OUTCOME_SASL_JAAS_CONFIG: evh-idpay-onboarding-outcome-idpay-onboarding-outcome-producer-jaas-config-idpay-00
     KAFKA_COMMANDS_SASL_JAAS_CONFIG: evh-idpay-commands-idpay-commands-producer-jaas-config-idpay-01
+    REWARD_NOTIFICATION_UPLOAD_SASL_JAAS_CONFIG: evh-idpay-reward-notification-upload-idpay-reward-notification-upload-producer-jaas-config-idpay-01
