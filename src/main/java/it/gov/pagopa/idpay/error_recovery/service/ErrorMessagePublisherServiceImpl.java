@@ -28,6 +28,7 @@ public class ErrorMessagePublisherServiceImpl implements ErrorMessagePublisherSe
         this.maxRetry = maxRetry;
 
         this.kafkaHeaderMapper = new DefaultKafkaHeaderMapper();
+        ((DefaultKafkaHeaderMapper)kafkaHeaderMapper).addRawMappedHeader(MessageHeaders.CONTENT_TYPE, true);
     }
 
     @Override
