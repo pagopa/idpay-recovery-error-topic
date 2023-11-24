@@ -4,9 +4,10 @@ import it.gov.pagopa.idpay.error_recovery.producer.Publisher;
 import it.gov.pagopa.idpay.error_recovery.utils.Constants;
 import it.gov.pagopa.idpay.error_recovery.utils.Utils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.support.DefaultKafkaHeaderMapper;
+import org.springframework.kafka.support.KafkaHeaderMapper;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -14,18 +15,19 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.HashMap;
 
 @Slf4j
 @Service
 public class ErrorMessagePublisherServiceImpl implements ErrorMessagePublisherService {
 
     private final long maxRetry;
+    private final KafkaHeaderMapper kafkaHeaderMapper;
 
     public ErrorMessagePublisherServiceImpl(@Value("${app.retry.max-retry}") long maxRetry) {
         this.maxRetry = maxRetry;
+
+        this.kafkaHeaderMapper = new DefaultKafkaHeaderMapper();
     }
 
     @Override
@@ -68,9 +70,9 @@ public class ErrorMessagePublisherServiceImpl implements ErrorMessagePublisherSe
         headers.remove("spring_json_header_types");
     }
 
-    private static Message<String> buildMessage(Headers headers, String key, String payload) {
-        Map<String, Object> headersMap = StreamSupport.stream(headers.spliterator(), false)
-                .collect(Collectors.toMap(Header::key, Header::value, (o1,o2)->o1));
+    private Message<String> buildMessage(Headers headers, String key, String payload) {
+        HashMap<String, Object> headersMap = new HashMap<>();
+        kafkaHeaderMapper.toHeaders(headers, headersMap);
         if(key!=null){
             headersMap.put(KafkaHeaders.KEY, key);
         }
