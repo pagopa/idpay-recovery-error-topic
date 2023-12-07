@@ -11,7 +11,7 @@
     <groupId>it.gov.pagopa</groupId>
     <artifactId>idpay-recovery-error-topic</artifactId>
     <name>idpay-recovery-error-topic</name>
-    <version>1.0.2</version>
+    <version>1.1.1</version>
 
     <properties>
         <java.version>17</java.version>
