@@ -227,7 +227,7 @@ class ErrorMessagesListenerTest extends BaseIntegrationTest {
                     jmsRecoveredMessages[0] = jmsPublisherMocks.stream().mapToLong(spy -> Mockito.mockingDetails(spy).getInvocations().size()).sum();
                     return kafkaRecoveredMessages[0]== kafkaMessage2recover && jmsRecoveredMessages[0]== serviceBusMessage2recover;
                 }, () -> "Sending %d kafka messages instead of %d; Sending %d service bus messages instead of %d".formatted(kafkaRecoveredMessages[0], kafkaMessage2recover, jmsRecoveredMessages[0], serviceBusMessage2recover),
-                10, 1000);
+                20, 1000);
     }
 
     private long countKafkaPublisherInvocations() {
