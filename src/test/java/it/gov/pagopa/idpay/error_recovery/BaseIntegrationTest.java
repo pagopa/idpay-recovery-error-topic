@@ -63,7 +63,6 @@ import static org.awaitility.Awaitility.await;
                 "logging.level.state.change.logger=WARN",
                 "spring.kafka.consumer.security.protocol=PLAINTEXT",
                 "spring.kafka.producer.security.protocol=PLAINTEXT",
-                "spring.cloud.stream.kafka.binder.zkNodes=${spring.embedded.zookeeper.connect}",
                 "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
                 "spring.kafka.consumer.bootstrap-servers=${spring.embedded.kafka.brokers}",
                 "handled-publishers.kafka.idpay-evh-ns-00.properties.bootstrap.servers=${spring.embedded.kafka.brokers}",
@@ -90,8 +89,6 @@ public abstract class BaseIntegrationTest {
 
     @Value("${spring.kafka.bootstrap-servers}")
     protected String kafkaBootstrapServers;
-    @Value("${spring.cloud.stream.kafka.binder.zkNodes}")
-    private String zkNodes;
 
     protected String serviceBusServers = "ServiceBusEndpoint";
 
@@ -139,7 +136,7 @@ public abstract class BaseIntegrationTest {
                         Embedded kafka: %s
                         ************************
                         """,
-                "bootstrapServers: %s, zkNodes: %s".formatted(kafkaBootstrapServers, zkNodes));
+                "bootstrapServers: %s".formatted(kafkaBootstrapServers));
     }
 
     protected Consumer<String, String> getEmbeddedKafkaConsumer(String topic, String groupId) {
