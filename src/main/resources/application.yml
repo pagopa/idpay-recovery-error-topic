@@ -54,6 +54,7 @@ spring:
       # Specify the pricing tier of your service bus. Supported values are premium, standard, and basic. Premium uses Java Message Service (JMS) 2.0, while standard and basic use JMS 1.0 to interact with Azure Service Bus.
       pricing-tier: ${SERVICEBUS_IDPAY_SB_PRICING_TIER:standard}
       topic-client-id: ${SERVICE_BUS_ERROR_MESSAGE_CLIENT_ID:idpay-errors-recovery}
+      idle-timeout: ${SERVICE_BUS_IDLE_TIMEOUT:PT1M}
 
 errorListener:
   topic: ${KAFKA_ERROR_MESSAGE_TOPIC:idpay-errors}

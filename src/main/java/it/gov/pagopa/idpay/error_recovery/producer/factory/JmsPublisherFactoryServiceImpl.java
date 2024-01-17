@@ -9,6 +9,7 @@ import it.gov.pagopa.idpay.error_recovery.producer.JmsPublisher;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Service
@@ -45,6 +46,7 @@ public class JmsPublisherFactoryServiceImpl implements JmsPublisherFactoryServic
         properties.setConnectionString(getConnectionString(defaultProps, overrides));
         properties.setPricingTier(overrides.getOrDefault("pricing-tier", defaultProps.getPricingTier()));
         properties.setTopicClientId(overrides.getOrDefault("topic-client-id", defaultProps.getTopicClientId()));
+        properties.setIdleTimeout(Duration.parse(overrides.getOrDefault("idle-timeout", defaultProps.getIdleTimeout().toString())));
         try {
             properties.afterPropertiesSet();
 
