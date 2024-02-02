@@ -41,10 +41,10 @@ class HandledPublishersConfigTest extends BaseIntegrationTest {
                 config.getKafkaPublisherProperties("localhost:9093", "idpay-rule-update"));
 
         Assertions.assertEquals(Map.of(
-                        "bootstrap.servers", "localhost:9093",
+                        "bootstrap.servers", "localhost:9092",
                         "client.id", "idpay-errors-recovery-idpay-transaction",
                         "sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"TRANSACTION\";"),
-                config.getKafkaPublisherProperties("localhost:9093", "idpay-transaction"));
+                config.getKafkaPublisherProperties("localhost:9092", "idpay-transaction"));
 
         Assertions.assertEquals(Map.of(
                         "bootstrap.servers", "localhost:9093",

@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.2</version>
     </parent>
 
     <groupId>it.gov.pagopa</groupId>
     <artifactId>idpay-recovery-error-topic</artifactId>
     <name>idpay-recovery-error-topic</name>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
 
     <properties>
         <java.version>17</java.version>
