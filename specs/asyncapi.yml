@@ -1,0 +1,294 @@
+asyncapi: 2.0.0
+info:
+  title: Recovery Error Topic
+  version: 1.0.0
+  description: >-
+    Its purpose is to manage the messages published on the error topic
+tags:
+  - name: "consumeRewardCalculatorError"
+    description: "Consume reward calculator error"
+  - name: "rescheduleRewardCalculatorMessage"
+    description: "Reschedule reward calculator message"
+
+  - name: "consumePaymentInstrumentError"
+    description: "Consume payment instrument error"
+  - name: "reschedulePaymentInstrumentMessage"
+    description: "Reschedule payment instrument message"
+
+  - name: "consumeWalletError"
+    description: "Consume wallet error"
+  - name: "rescheduleWalletMessage"
+    description: "Reschedule wallet message"
+
+  - name: "consumeTransactionError"
+    description: "Consume Transaction error"
+  - name: "rescheduleTransactionMessage"
+    description: "Reschedule transaction message"
+
+  - name: "consumeRewardNotificationError"
+    description: "Consume reward notification error"
+  - name: "rescheduleRewardNotificationMessage"
+    description: "Reschedule reward notification message"
+
+  - name: "consumeIbanError"
+    description: "Consume iban error"
+  - name: "rescheduleIbanMessage"
+    description: "Reschedule iban message"
+
+  - name: "consumeAdmissibilityAssessorError"
+    description: "Consume admissibility-assessor error"
+  - name: "rescheduleAdmissibilityAssessorMessage"
+    description: "Reschedule admissibility-assessor message"
+
+  - name: "consumeRewardUserIdSplitterError"
+    description: "Consume reward user id splitter error"
+  - name: "rescheduleRewardUserIdSplitterMessage"
+    description: "Reschedule reward user id splitter message"
+
+channels:
+
+  recovery-consume-reward-calculator-error:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ConsumeRewardCalculatorError'
+      bindings:
+        kafka:
+          topic: idpay-error-topic
+      tags:
+        - name: "consumeRewardCalculatorError"
+  recovery-reschedule-reward-calculator-message:
+    publish:
+      message:
+        $ref: '#/components/messages/RescheduleRewardCalculatorMessage'
+      bindings:
+        kafka:
+          topic:
+      tags:
+        - name: "rescheduleRewardCalculatorMessage"
+
+  recovery-consume-payment-instrument-error:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ConsumePaymentInstrumentError'
+      bindings:
+        kafka:
+          topic: idpay-error-topic
+      tags:
+        - name: "consumePaymentInstrumentError"
+  recovery-reschedule-payment-instrument-message:
+    publish:
+      message:
+        $ref: '#/components/messages/ReschedulePaymentInstrumentMessage'
+      bindings:
+        kafka:
+          topic:
+      tags:
+        - name: "reschedulePaymentInstrumentMessage"
+
+  recovery-consume-wallet-error:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ConsumeWalletError'
+      bindings:
+        kafka:
+          topic: idpay-error-topic
+      tags:
+        - name: "consumeWalletError"
+  recovery-reschedule-wallet-message:
+    publish:
+      message:
+        $ref: '#/components/messages/RescheduleWalletMessage'
+      bindings:
+        kafka:
+          topic:
+      tags:
+        - name: "rescheduleWalletMessage"
+
+  recovery-consume-transaction-error:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ConsumeTransactionError'
+      bindings:
+        kafka:
+          topic: idpay-error-topic
+      tags:
+        - name: "consumeTransactionError"
+  recovery-reschedule-transaction-message:
+    publish:
+      message:
+        $ref: '#/components/messages/RescheduleTransactionMessage'
+      bindings:
+        kafka:
+          topic:
+      tags:
+        - name: "rescheduleTransactionMessage"
+
+  recovery-consume-reward-notification-error:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ConsumeRewardNotificationError'
+      bindings:
+        kafka:
+          topic: idpay-error-topic
+      tags:
+        - name: "consumeRewardNotificationError"
+  recovery-reschedule-reward-notification-message:
+    publish:
+      message:
+        $ref: '#/components/messages/RescheduleRewardNotificationMessage'
+      bindings:
+        kafka:
+          topic:
+      tags:
+        - name: "rescheduleRewardNotificationMessage"
+
+  recovery-consume-iban-error:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ConsumeIbanError'
+      bindings:
+        kafka:
+          topic: idpay-error-topic
+      tags:
+        - name: "consumeIbanError"
+  recovery-reschedule-iban-message:
+    publish:
+      message:
+        $ref: '#/components/messages/RescheduleIbanMessage'
+      bindings:
+        kafka:
+          topic:
+      tags:
+        - name: "rescheduleIbanEMessage"
+
+  recovery-consume-admissibility-assessor-error:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ConsumeAdmissibilityAssessorError'
+      bindings:
+        kafka:
+          topic: idpay-error-topic
+      tags:
+        - name: "consumeAdmissibilityAssessorError"
+  recovery-reschedule-admissibility-assessor-message:
+    publish:
+      message:
+        $ref: '#/components/messages/RescheduleAdmissibilityAssessorMessage'
+      bindings:
+        kafka:
+          topic:
+      tags:
+        - name: "rescheduleAdmissibilityAssessorEMessage"
+
+  recovery-consume-reward-user-id-splitter-error:
+    subscribe:
+      message:
+        $ref: '#/components/messages/ConsumeRewardUserIdSplitterError'
+      bindings:
+        kafka:
+          topic: idpay-error-topic
+      tags:
+        - name: "consumeRewardUserIdSplitterError"
+  recovery-reschedule-reward-user-id-splitter-message:
+    publish:
+      message:
+        $ref: '#/components/messages/RescheduleRewardUserIdSplitterMessage'
+      bindings:
+        kafka:
+          topic:
+      tags:
+        - name: "rescheduleRewardUserIdSplitterEMessage"
+
+
+components:
+  messages:
+
+    ConsumeRewardCalculatorError:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    RescheduleRewardCalculatorMessage:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    
+    ConsumePaymentInstrumentError:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    ReschedulePaymentInstrumentMessage:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    
+    ConsumeWalletError:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    RescheduleWalletMessage:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    
+    ConsumeTransactionError:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    RescheduleTransactionMessage:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    
+    ConsumeRewardNotificationError:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    RescheduleRewardNotificationMessage:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    
+    ConsumeIbanError:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    RescheduleIbanMessage:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    
+    ConsumeAdmissibilityAssessorError:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    RescheduleAdmissibilityAssessorMessage:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    
+    ConsumeRewardUserIdSplitterError:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies
+    RescheduleRewardUserIdSplitterMessage:
+      contentType: application/json
+      description: >-
+        This event is 
+      summary: Notifies 
+
+
