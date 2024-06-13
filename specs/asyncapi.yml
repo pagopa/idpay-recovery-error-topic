@@ -20,7 +20,7 @@ tags:
     description: "Consume payment instrument error"
   - name: "rescheduleRtdMessage"
     description: "Reschedule rtd message"
-  - name: "rescheduleRuleEnginetMessage"
+  - name: "rescheduleRuleEngineMessage"
     description: "Reschedule rule engine message"
 
   - name: "consumeWalletError"
@@ -50,9 +50,9 @@ tags:
     description: "Reschedule reward notification message"
   - name: "rescheduleRewardNotificationIbanNotifyOutcomeEvaluationMessage"
     description: "Reschedule reward notification message"
-  - name: "rescheduleRewardNotificationRewardNotificationUploadMessage"
+  - name: "rescheduleRewardNotificationUploadMessage"
     description: "Reschedule reward notification message"
-  - name: "rescheduleRewardNotificationrFeedbackMessage"
+  - name: "rescheduleRewardNotificationFeedbackMessage"
     description: "Reschedule reward notification message"
   - name: "rescheduleRewardNotificationDeleteInitiativeMessage"
     description: "Reschedule reward notification message"
@@ -95,7 +95,7 @@ channels:
           topic: idpay-error-topic
       tags:
         - name: "consumeRewardCalculatorError"
-  recovery-rescheduleRewardTransactionMessage:
+  recovery-reschedule-Reward-Transaction-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleRewardTransactionMessage'
@@ -104,7 +104,7 @@ channels:
           topic: idpay-rule-update
       tags:
         - name: "rescheduleRewardTransactionMessage"
-  recovery-rescheduleRewardRuleBuilderMessage:
+  recovery-reschedule-Reward-Rule-Builder-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleRewardRuleBuilderMessage'
@@ -113,7 +113,7 @@ channels:
           topic: idpay-hpan-update
       tags:
         - name: "rescheduleRewardRuleBuilderMessage"
-  recovery-rescheduleHpanUpdateEvaluationMessage:
+  recovery-reschedule-Hpan-Update-Evaluation-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleHpanUpdateEvaluationMessage'
@@ -122,7 +122,7 @@ channels:
           topic: idpay-transaction
       tags:
         - name: "rescheduleHpanUpdateEvaluationMessage"
-  recovery-rescheduleUserCounterUnlockEvaluationMessage:
+  recovery-reschedule-User-Counter-Unlock-Evaluation-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleUserCounterUnlockEvaluationMessage'
@@ -141,7 +141,7 @@ channels:
           topic: idpay-error-topic
       tags:
         - name: "consumePaymentInstrumentError"
-  recovery-rescheduleRtdMessage:
+  recovery-reschedule-Rtd-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleRtdMessage'
@@ -150,15 +150,15 @@ channels:
           topic: rtd_pi_from_app_topic
       tags:
         - name: "rescheduleRtdMessage"
-  recovery-rescheduleRuleEnginetMessage:
+  recovery-reschedule-Rule-:
     publish:
       message:
-        $ref: '#/components/messages/RescheduleRuleEnginetMessage'
+        $ref: '#/components/messages/RescheduleRuleEngineMessage'
       bindings:
         kafka:
           topic: idpay_hpan_update_topic
       tags:
-        - name: "rescheduleRuleEnginetMessage"
+        - name: "rescheduleRuleEngineMessage"
 
   recovery-consume-wallet-error:
     subscribe:
@@ -169,7 +169,7 @@ channels:
           topic: idpay-error-topic
       tags:
         - name: "consumeWalletError"
-  recovery-rescheduleWalletEnrollIbanMessage:
+  recovery-reschedule-Wallet-Enroll-Iban-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleWalletEnrollIbanMessage'
@@ -178,7 +178,7 @@ channels:
           topic:  idpay_checkiban_evaluation_topic
       tags:
         - name: "rescheduleWalletEnrollIbanMessage"
-  recovery-rescheduleWalletRewardTransactionMessage:
+  recovery-reschedule-Wallet-Reward-Transaction-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleWalletRewardTransactionMessage'
@@ -187,7 +187,7 @@ channels:
           topic: idpay_reward_notification_response_topic
       tags:
         - name: "rescheduleWalletRewardTransactionMessage"
-  recovery-rescheduleWalletNotificationMessage:
+  recovery-reschedule-Wallet-Notification-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleWalletNotificationMessage'
@@ -196,7 +196,7 @@ channels:
           topic: idpay_notification_request_topic
       tags:
         - name: "rescheduleWalletNotificationMessage"
-  recovery-rescheduleWalletTimelineMessage:
+  recovery-reschedule-Wallet-Timeline-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleWalletTimelineMessage'
@@ -215,7 +215,7 @@ channels:
           topic: idpay-error-topic
       tags:
         - name: "consumeTransactionError"
-  recovery-rescheduleNotifyTransactionMessage:
+  recovery-reschedule-Notify-Transaction-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleNotifyTransactionMessage'
@@ -224,7 +224,7 @@ channels:
           topic: idpay-transaction
       tags:
         - name: "rescheduleTransactionMessage"
-  recovery-rescheduleNotifyTransactionCommandsMessage:
+  recovery-reschedule-Notify-Transaction-Commands-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleNotifyTransactionCommandsMessage'
@@ -243,7 +243,7 @@ channels:
           topic: idpay-error-topic
       tags:
         - name: "consumeRewardNotificationError"
-  recovery-rescheduleRewardNotificationRefundRuleNotifyMessage:
+  recovery-reschedule-Reward-Notification-Refund-Rule-Notify-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleRewardNotificationRefundRuleNotifyMessage'
@@ -252,7 +252,7 @@ channels:
           topic: idpay-transaction-rule-update
       tags:
         - name: "rescheduleRewardNotificationRefundRuleNotifyMessage"
-  recovery-rescheduleRewardNotificationRewardTrxNotifyEvaluationMessage:
+  recovery-reschedule-Reward-Notification-Reward-Trx-Notify-Evaluation-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleRewardNotificationRewardTrxNotifyEvaluationMessage'
@@ -261,7 +261,7 @@ channels:
           topic: idpay-transaction
       tags:
         - name: "rescheduleRewardNotificationRewardTrxNotifyEvaluationMessage"
-  recovery-rescheduleRewardNotificationIbanNotifyOutcomeEvaluationMessage:
+  recovery-reschedule-Reward-Notification-Iban-Notify-Outcome-Evaluation-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleRewardNotificationIbanNotifyOutcomeEvaluationMessage'
@@ -270,25 +270,25 @@ channels:
           topic: idpay-checkiban-outcome
       tags:
         - name: "rescheduleRewardNotificationIbanNotifyOutcomeEvaluationMessage"
-  recovery-rescheduleRewardNotificationRewardNotificationUploadMessage:
+  recovery-reschedule-Reward-Notification-Upload-Message:
     publish:
       message:
-        $ref: '#/components/messages/RescheduleRewardNotificationRewardNotificationUploadMessage'
+        $ref: '#/components/messages/RescheduleRewardNotificationUploadMessage'
       bindings:
         kafka:
           topic: idpay-reward-notification-storage-events
       tags:
-        - name: "rescheduleRewardNotificationRewardNotificationUploadMessage"
-  recovery-rescheduleRewardNotificationrFeedbackMessage:
+        - name: "rescheduleRewardNotificationUploadMessage"
+  recovery-reschedule-Reward-Notification-Feedback-Message:
     publish:
       message:
-        $ref: '#/components/messages/RescheduleRewardNotificationrFeedbackMessage'
+        $ref: '#/components/messages/RescheduleRewardNotificationFeedbackMessage'
       bindings:
         kafka:
           topic: idpay-reward-notification-response
       tags:
-        - name: "rescheduleRewardNotificationrFeedbackMessage"
-  recovery-rescheduleRewardNotificationDeleteInitiativeMessage:
+        - name: "rescheduleRewardNotificationFeedbackMessage"
+  recovery-reschedule-Reward-Notification-Delete-Initiative-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleRewardNotificationDeleteInitiativeMessage'
@@ -307,7 +307,7 @@ channels:
           topic: idpay-error-topic
       tags:
         - name: "consumeIbanError"
-  recovery-rescheduleIbanToWalletMessage:
+  recovery-reschedule-Iban-ToWallet-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleIbanToWalletMessage'
@@ -316,7 +316,7 @@ channels:
           topic:
       tags:
         - name: "rescheduleSendIbanToWalletMessage"
-  recovery-rescheduleCheckIbanMessage:
+  recovery-reschedule-Check-Iban-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleCheckIbanMessage'
@@ -335,7 +335,7 @@ channels:
           topic: idpay-error-topic
       tags:
         - name: "consumeAdmissibilityAssessorError"
-  recovery-rescheduleBeneficiaryRuleMessage:
+  recovery-reschedule-Beneficiary-Rule-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleBeneficiaryRuleMessage'
@@ -344,7 +344,7 @@ channels:
           topic: idpay-beneficiary-rule-update
       tags:
         - name: "rescheduleBeneficiaryRuleMessage"
-  recovery-rescheduleCommandMediatorMessage:
+  recovery-reschedule-Command-Mediator-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleCommandMediatorMessage'
@@ -353,7 +353,7 @@ channels:
           topic: idpay-onboarding-request
       tags:
         - name: "rescheduleCommandMediatorMessage"
-  recovery-rescheduleOnboardingRequestMessage:
+  recovery-reschedule-Onboarding-Request-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleOnboardingRequestMessage'
@@ -362,7 +362,7 @@ channels:
           topic: idpay-commands
       tags:
         - name: "rescheduleOnboardingRequestMessage"
-  recovery-rescheduleOnboardingNotifierMessage:
+  recovery-reschedule-Onboarding-Notifier-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleOnboardingNotifierMessage'
@@ -371,7 +371,7 @@ channels:
           topic: idpay-onboarding-outcome
       tags:
         - name: "rescheduleOnboardingNotifierMessage"
-  recovery-rescheduleRankingNotifierMessage:
+  recovery-reschedule-Ranking-Notifier-Message:
     publish:
       message:
         $ref: '#/components/messages/rescheduleRankingNotifierMessage'
@@ -390,7 +390,7 @@ channels:
           topic: idpay-error-topic
       tags:
         - name: "consumeRewardUserIdSplitterError"
-  recovery-rescheduleTransactionEvaluationNotifyMessage:
+  recovery-reschedule-Transaction-Evaluation-Notify-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleTransactionEvaluationNotifyMessage'
@@ -399,7 +399,7 @@ channels:
           topic:
       tags:
         - name: "rescheduleTransactionEvaluationNotifyMessage"
-  recovery-rescheduleEnrichedTransactionMessage:
+  recovery-reschedule-Enriched-Transactio-Message:
     publish:
       message:
         $ref: '#/components/messages/RescheduleEnrichedTransactionMessage'
@@ -427,8 +427,8 @@ components:
     RescheduleRewardTransactionMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the reward transaction mesage for the reward calculator service 
+      summary: Rescheduled the the reward transaction mesage
       payload:
         oneOf:
           - $ref: "https://raw.githubusercontent.com/pagopa/idpay-reward-calculator/release-uat/specs/asyncapi.yaml#/components/schemas/TransactionProcessed"
@@ -436,15 +436,15 @@ components:
     RescheduleRewardRuleBuilderMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the reward rule builder mesage for the reward calculator service 
+      summary: Rescheduled the the reward rule builder transaction mesage
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-portal-welfare-backend-initiative/release-uat/specs/asyncapi.yml#/components/schemas/RuleUpdate"
     RescheduleHpanUpdateEvaluationMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the hpan update evaluation mesage for the reward calculator service 
+      summary: Rescheduled the hpan update evaluation mesage
       payload:
         oneOf:
           - $ref: "https://raw.githubusercontent.com/pagopa/idpay-payment-instrument/release-uat/specs/asyncapi.yml#/components/schemas/RuleEngineRequestDTO"
@@ -452,8 +452,8 @@ components:
     RescheduleUserCounterUnlockEvaluationMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the user counter unlock evaluation mesage for the reward calculator service 
+      summary: Rescheduled the user counter unlock evaluation mesage
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-reward-user-id-splitter/release-uat/specs/asyncapi.yaml#/components/schemas/TransactionEnrichedDTO"
 
@@ -470,19 +470,19 @@ components:
     RescheduleRtdMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the rtd mesage for the payment instrument service 
+      summary: Rescheduled the rtd mesage
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-payment-instrument/release-uat/specs/asyncapi.yml#/components/schemas/RTDOperationDTO"
-    RescheduleRuleEnginetMessage:
+    RescheduleRuleEngineMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the rule engine mesage for the payment instrument service 
+      summary: Rescheduled the rule engine mesage
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-payment-instrument/release-uat/specs/asyncapi.yml#/components/schemas/RuleEngineRequestDTO"
-
-
+    
+    
     ConsumeWalletError:
       contentType: application/json
       description: >-
@@ -499,15 +499,15 @@ components:
     RescheduleWalletEnrollIbanMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the wallet enroll iban message for the wallet service 
+      summary: Rescheduled the wallet enroll iban message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-wallet/release-uat/specs/asyncapi.yml#/components/schemas/IbanQueueDTO"
     RescheduleWalletRewardTransactionMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the wallet reward transaction message for the wallet service 
+      summary: Rescheduled the wallet reward transaction message
       payload:
         oneOf:
           - $ref: 'https://raw.githubusercontent.com/pagopa/idpay-payment/release-uat/specs/asyncapi.yml#/components/schemas/TransactionInProgress'
@@ -516,15 +516,15 @@ components:
     RescheduleWalletNotificationMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the wallet notification message for the wallet service 
+      summary: Rescheduled the wallet notificaion message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-wallet/release-uat/specs/asyncapi.yml#/components/schemas/NotificationQueueDTO"
     RescheduleWalletTimelineMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the wallet timeline message for the wallet service 
+      summary: Rescheduled the wallet timeline message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-wallet/release-uat/specs/asyncapi.yml#/components/schemas/QueueOperationDTO"
 
@@ -542,8 +542,8 @@ components:
     RescheduleNotifyTransactionMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the notify transaction message for the transaction service 
+      summary: Rescheduled the notify transaction message
       payload:
         oneOf:
           - $ref: 'https://raw.githubusercontent.com/pagopa/idpay-payment/release-uat/specs/asyncapi.yml#/components/schemas/TransactionInProgress'
@@ -552,11 +552,11 @@ components:
     RescheduleNotifyTransactionCommandsMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the notify transaction commands message for the transaction service 
+      summary: Rescheduled the notify transaction commands message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-portal-welfare-backend-initiative/release-uat/specs/asyncapi.yml#/components/schemas/QueueCommandOperationDTO"
-
+    
     ConsumeRewardNotificationError:
       contentType: application/json
       description: >-
@@ -575,15 +575,15 @@ components:
     RescheduleRewardNotificationRefundRuleNotifyMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the refund rule notify message for the reward notification service 
+      summary: Rescheduled the refund rule notify message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-portal-welfare-backend-initiative/release-uat/specs/asyncapi.yml#/components/schemas/RuleUpdate"
     RescheduleRewardNotificationRewardTrxNotifyEvaluationMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the reward transaction notify evalution message for the reward notification service 
+      summary: Rescheduled the reward transaction notify evalution message
       payload:
         oneOf:
           - $ref: "https://raw.githubusercontent.com/pagopa/idpay-payment/release-uat/specs/asyncapi.yml#/components/schemas/TransactionInProgress"
@@ -592,32 +592,32 @@ components:
     RescheduleRewardNotificationIbanNotifyOutcomeEvaluationMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the iban notify outcome evaluation message for the reward notification service 
+      summary: Rescheduled the iban notify outcome evaluation message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-iban/release-uat/specs/asyncapi.yml#/components/schemas/IbanQueueWalletDTO"
-    RescheduleRewardNotificationRewardNotificationUploadMessage:
+    RescheduleRewardNotificationUploadMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the reward notification upload message for the reward notification service 
+      summary: Rescheduled the reward notification upload message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-reward-notification/release-uat/specs/asyncapi.yaml#/components/schemas/StorageEventDto"
-    RescheduleRewardNotificationrFeedbackMessage:
+    RescheduleRewardNotificationFeedbackMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the reward notification feedback message for the reward notification service 
+      summary: Rescheduled the reward notification feedback message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-reward-notification/release-uat/specs/asyncapi.yaml#/components/schemas/RewardFeedbackDTO"
     RescheduleRewardNotificationDeleteInitiativeMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the delete initiative message for the reward notification service 
+      summary: Rescheduled the delete initiative message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-portal-welfare-backend-initiative/release-uat/specs/asyncapi.yml#/components/schemas/QueueCommandOperationDTO"
-
+    
     ConsumeIbanError:
       contentType: application/json
       description: >-
@@ -628,15 +628,15 @@ components:
     RescheduleIbanToWalletMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the iban to wallet message for the iban service 
+      summary: Rescheduled the iban to wallet message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-wallet/release-uat/specs/asyncapi.yml#/components/schemas/IbanQueueDTO"
     RescheduleCheckIbanMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the check iban message for the iban service 
+      summary: Rescheduled the check iban message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-wallet/release-uat/specs/asyncapi.yml#/components/schemas/IbanQueueDTO"
 
@@ -655,36 +655,36 @@ components:
     RescheduleBeneficiaryRuleMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the beneficiary rule message for the admissibility assessor service 
+      summary: Rescheduled the beneficiary rule message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-portal-welfare-backend-initiative/release-uat/specs/asyncapi.yml#/components/schemas/RuleUpdate"
     RescheduleCommandMediatorMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the command mediator message for the admissibility assessor service 
+      summary: Rescheduled the command mediator message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-portal-welfare-backend-initiative/release-uat/specs/asyncapi.yml#/components/schemas/QueueCommandOperationDTO"
     RescheduleOnboardingRequestMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the onboarding request message for the admissibility assessor service 
+      summary: Rescheduled the onboarding request message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-admissibility-assessor/release-uat/specs/asyncapi.yml#/components/schemas/OnboardingDTO"
     RescheduleOnboardingNotifierMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the onboarding notifier message for the admissibility assessor service 
+      summary: Rescheduled the onboarding request message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-admissibility-assessor/release-uat/specs/asyncapi.yml#/components/schemas/EvaluationCompletedDTO"
     rescheduleRankingNotifierMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the ranking notifier message for the admissibility assessor service 
+      summary: Rescheduled the ranking notifier message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-admissibility-assessor/release-uat/specs/asyncapi.yml#/components/schemas/RankingRequestDTO"
 
@@ -700,15 +700,15 @@ components:
     RescheduleTransactionEvaluationNotifyMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the transaction evaluation notify message for the reward user id splitter service 
+      summary: Rescheduled the transaction evaluation notify message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-reward-user-id-splitter/release-uat/specs/asyncapi.yaml#/components/schemas/TransactionDTO"
     RescheduleEnrichedTransactionMessage:
       contentType: application/json
       description: >-
-        This event is
-      summary: Notifies
+        This event is produced to rescheduled the enriched transaction message for the reward user id splitter service 
+      summary: Rescheduled the enriched transaction message
       payload:
         $ref: "https://raw.githubusercontent.com/pagopa/idpay-reward-user-id-splitter/release-uat/specs/asyncapi.yaml#/components/schemas/TransactionEnrichedDTO"
 
