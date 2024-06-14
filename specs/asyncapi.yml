@@ -578,7 +578,7 @@ channels:
         $ref: '#/components/messages/RescheduleStatisticsTransactionEvaluationMessage'
       bindings:
         kafka:
-          topic: idpay-transactions}
+          topic: idpay-transactions
       tags:
         - name: "rescheduleStatisticsOnboardingOutcomeMessage"
 
