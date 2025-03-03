@@ -44,7 +44,7 @@ microservice-chart:
       -XX:MaxRAMPercentage=85.0
       -XX:+UseG1GC
       -XX:+UseContainerSupport
-      -Djava.security.egd=file:/prod/./urandom
+      -Djava.security.egd=file:/dev/./urandom
       -Djava.util.concurrent.ForkJoinPool.common.parallelism=7 
       -Dio.netty.eventLoopThreads=100 -javaagent:/app/applicationinsights-agent.jar 
       -Dapplicationinsights.configuration.file=/mnt/file-config-external/appinsights-config/applicationinsights.json
