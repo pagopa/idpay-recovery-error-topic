@@ -31,6 +31,7 @@ public class PublisherFactoryServiceImpl implements PublisherFactoryService {
 
     @Override
     public Publisher retrievePublisher(Headers headers) {
+
         String srcType = Optional.ofNullable(Utils.readHeaderValue(headers, Constants.ERROR_MSG_HEADER_SRC_TYPE)).orElse("kafka");
         String srcServer = Utils.readHeaderValue(headers, Constants.ERROR_MSG_HEADER_SRC_SERVER);
         String srcTopic = Utils.readHeaderValue(headers, Constants.ERROR_MSG_HEADER_SRC_TOPIC);
