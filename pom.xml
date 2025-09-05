@@ -107,7 +107,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-codec-http</artifactId>
-                <version>4.1.115.Final</version>
+                <version>4.1.125.Final</version>
             </dependency>
 
             <!-- Jackson Databind -->
