@@ -101,32 +101,6 @@
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>9.37.3</version>
             </dependency>
-
-            <!-- Jackson Databind -->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>2.18.2</version>
-            </dependency>
-
-            <!-- Reactor Netty -->
-            <dependency>
-                <groupId>io.projectreactor.netty</groupId>
-                <artifactId>reactor-netty-http</artifactId>
-                <version>1.1.15</version>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor.netty</groupId>
-                <artifactId>reactor-netty-core</artifactId>
-                <version>1.1.15</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.minidev</groupId>
-                <artifactId>json-smart</artifactId>
-                <version>2.5.2</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
