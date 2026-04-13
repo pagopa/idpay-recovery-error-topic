@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.data.mongodb.test.autoconfigure.AutoConfigureDataMongo;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -276,7 +275,7 @@ public abstract class BaseIntegrationTest {
     protected static void wait(long timeout, TimeUnit timeoutUnit) {
         try{
             Awaitility.await().timeout(timeout, timeoutUnit).until(()->false);
-        } catch (ConditionTimeoutException ex){
+        } catch (ConditionTimeoutException _){
             // Do Nothing
         }
     }

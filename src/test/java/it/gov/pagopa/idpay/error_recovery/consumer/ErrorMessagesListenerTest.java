@@ -35,28 +35,29 @@ class ErrorMessagesListenerTest {
 
     @Test
     void shouldPauseContainerAndProcessMessages() {
-        ConsumerRecord<String, String> record =
+        ConsumerRecord<String, String> consumerRecord =
                 new ConsumerRecord<>("topic", 0, 0L, "key", "value");
 
-        listener.onMessage(List.of(record), acknowledgment);
+        listener.onMessage(List.of(consumerRecord), acknowledgment);
 
         verify(container, times(1)).pause();
-        verify(mediatorService, times(1)).accept(record);
+        verify(mediatorService, times(1)).accept(consumerRecord);
         verify(acknowledgment, times(1)).acknowledge();
     }
 
     @Test
+    @SuppressWarnings("squid:S2925")
     void shouldHandleExceptionWithoutFailing() {
-        ConsumerRecord<String, String> record =
+        ConsumerRecord<String, String> consumerRecord =
                 new ConsumerRecord<>("topic", 0, 0L, "key", "value");
 
         doThrow(new RuntimeException("boom"))
-                .when(mediatorService).accept(record);
+                .when(mediatorService).accept(consumerRecord);
 
-        listener.onMessage(List.of(record), acknowledgment);
+        listener.onMessage(List.of(consumerRecord), acknowledgment);
 
         verify(container, times(1)).pause();
-        verify(mediatorService, times(1)).accept(record);
+        verify(mediatorService, times(1)).accept(consumerRecord);
 
         // must still ack even if exception occurs
         verify(acknowledgment, times(1)).acknowledge();
@@ -75,7 +76,6 @@ class ErrorMessagesListenerTest {
                 new ConsumerRecord<>("t", 0, 0L, "k", "v")
         ), acknowledgment);
 
-        // force wait to exceed pause
         Thread.sleep(1100);
 
         listener.scheduledResume();
