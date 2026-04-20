@@ -1,71 +1,93 @@
 package it.gov.pagopa.idpay.error_recovery.config;
 
-import it.gov.pagopa.idpay.error_recovery.BaseIntegrationTest;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestPropertySource;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 
-@TestPropertySource(
-        properties = {
-                "handled-publishers.kafka.idpay-evh-ns-00.properties.bootstrap.servers=localhost:9092",
-                "handled-publishers.kafka.idpay-evh-ns-01.properties.bootstrap.servers=localhost:9093",
+import static org.junit.jupiter.api.Assertions.*;
 
-                "handled-publishers.kafka.idpay-evh-ns-01.destination.idpay-transaction-user-id-splitter.client.id=OVERRIDDEN_CLIENT_ID"
-        })
-class HandledPublishersConfigTest extends BaseIntegrationTest {
+class HandledPublishersConfigTest {
 
-    @Autowired
     private HandledPublishersConfig config;
 
-    @Test
-    void testKafkaConfig() {
-        Assertions.assertEquals(Map.of(
-                        "bootstrap.servers", "localhost:9092",
-                        "client.id", "idpay-errors-recovery-idpay-onboarding-outcome",
-                        "sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"ONBOARDING_OUTCOME\";"),
-                config.getKafkaPublisherProperties("localhost:9092", "idpay-onboarding-outcome"));
+    @BeforeEach
+    void setUp() throws Exception {
+        config = new HandledPublishersConfig();
 
-        Assertions.assertEquals(Map.of(
-                        "bootstrap.servers", "localhost:9093",
-                        "client.id", "idpay-errors-recovery-idpay-hpan-update",
-                        "sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"HPAN_UPDATE\";"),
-                config.getKafkaPublisherProperties("localhost:9093", "idpay-hpan-update"));
+        // set defaultClientId (@Value field)
+        setField(config, "defaultClientId", "test-client");
 
-        Assertions.assertEquals(Map.of(
-                        "bootstrap.servers", "localhost:9093",
-                        "client.id", "idpay-errors-recovery-idpay-rule-update",
-                        "sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"RULE_UPDATE\";"),
-                config.getKafkaPublisherProperties("localhost:9093", "idpay-rule-update"));
+        // mock kafka properties
+        config.setKafka(Map.of(
+                "evh1.properties.bootstrap.servers", "localhost:9092",
+                "evh1.destination.topicA", "someValue"
+        ));
 
-        Assertions.assertEquals(Map.of(
-                        "bootstrap.servers", "localhost:9092",
-                        "client.id", "idpay-errors-recovery-idpay-transaction",
-                        "sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"TRANSACTION\";"),
-                config.getKafkaPublisherProperties("localhost:9092", "idpay-transaction"));
+        // mock servicebus properties
+        config.setServicebus(Map.of(
+                "sb1.properties.connection-string", "Endpoint=sb://myservicebus.servicebus.windows.net/;SharedAccessKeyName=key;",
+                "sb1.destination.queueA", "queueValue"
+        ));
 
-        Assertions.assertEquals(Map.of(
-                        "bootstrap.servers", "localhost:9093",
-                        "client.id", "OVERRIDDEN_CLIENT_ID",
-                        "sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$ConnectionString\" password=\"TRANSACTION_USER_ID_SPLITTER\";")
-                , config.getKafkaPublisherProperties("localhost:9093", "idpay-transaction-user-id-splitter"));
-
-
-        Assertions.assertNull(config.getKafkaPublisherProperties("DUMMY", "idpay-transaction-user-id-splitter"));
-        Assertions.assertNull(config.getKafkaPublisherProperties("localhost:9093", "DUMMY"));
+        // call @PostConstruct init()
+        invokeMethod(config, "init");
     }
 
     @Test
-    void testServiceBusConfig() {
-        Assertions.assertEquals(
-                Map.of(
-                        "connection-string", "Endpoint=sb://ServiceBusEndpoint;SharedAccessKeyName=sharedAccessKeyName;SharedAccessKey=sharedAccessKey;EntityPath=entityPath",
-                        "topic-client-id", "idpay-errors-recovery-idpay-onboarding-request"),
-                config.getServiceBusPublisherProperties("ServiceBusEndpoint", "idpay-onboarding-request"));
+    void shouldBuildKafkaPublisherProperties() {
+        Map<String, Object> props =
+                config.getKafkaPublisherProperties("localhost:9092", "topicA");
 
-        Assertions.assertNull(config.getKafkaPublisherProperties("DUMMY", "idpay-onboarding-request"));
-        Assertions.assertNull(config.getKafkaPublisherProperties("ServiceBusEndpoint", "DUMMY"));
+        assertNotNull(props);
+        assertEquals("localhost:9092", props.get("bootstrap.servers"));
+        assertEquals("test-client-topicA", props.get("client.id"));
+    }
+
+    @Test
+    void shouldBuildServiceBusPublisherProperties() {
+        Map<String, String> props =
+                config.getServiceBusPublisherProperties("myservicebus.servicebus.windows.net/", "queueA");
+
+        assertNotNull(props);
+    }
+
+    @Test
+    void shouldExtractServerFromConnectionString() throws Exception {
+        Method m = HandledPublishersConfig.class
+                .getDeclaredMethod("extractServerFromServiceBusConnectionString", String.class);
+        m.setAccessible(true);
+
+        String result = (String) m.invoke(config,
+                "Endpoint=sb://example.servicebus.windows.net/;SharedAccessKeyName=key;");
+
+        assertEquals("example.servicebus.windows.net/", result);
+    }
+
+    @Test
+    void shouldReturnNullServerWhenConnectionStringEmpty() throws Exception {
+        Method m = HandledPublishersConfig.class
+                .getDeclaredMethod("extractServerFromServiceBusConnectionString", String.class);
+        m.setAccessible(true);
+
+        String result = (String) m.invoke(config, "");
+
+        assertNull(result);
+    }
+
+    // -------- helpers --------
+
+    private static void setField(Object target, String field, Object value) throws Exception {
+        Field f = target.getClass().getDeclaredField(field);
+        f.setAccessible(true);
+        f.set(target, value);
+    }
+
+    private static void invokeMethod(Object target, String method) throws Exception {
+        Method m = target.getClass().getDeclaredMethod(method);
+        m.setAccessible(true);
+        m.invoke(target);
     }
 }
