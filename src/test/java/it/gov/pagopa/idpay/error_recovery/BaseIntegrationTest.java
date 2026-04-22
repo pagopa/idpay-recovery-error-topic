@@ -19,8 +19,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
+import org.springframework.boot.data.mongodb.test.autoconfigure.AutoConfigureDataMongo;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -45,7 +44,6 @@ import java.util.stream.StreamSupport;
 import static org.awaitility.Awaitility.await;
 
 @SpringBootTest
-@EnableAutoConfiguration()
 @EmbeddedKafka(topics = {
         "${errorListener.topic}",
         "idpay-onboarding-outcome",
@@ -67,7 +65,6 @@ import static org.awaitility.Awaitility.await;
                 "spring.kafka.consumer.bootstrap-servers=${spring.embedded.kafka.brokers}",
                 "handled-publishers.kafka.idpay-evh-ns-00.properties.bootstrap.servers=${spring.embedded.kafka.brokers}",
                 "handled-publishers.kafka.idpay-evh-ns-01.properties.bootstrap.servers=${spring.embedded.kafka.brokers}",
-                //endregion
 
                 //region service bus
                 // mocked replacing it using kafka
@@ -148,7 +145,7 @@ public abstract class BaseIntegrationTest {
             kafkaBroker.addTopics(topic);
         }
 
-        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(groupId, "true", kafkaBroker);
+        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(kafkaBroker, groupId, true);
         consumerProps.put("key.deserializer", StringDeserializer.class);
         DefaultKafkaConsumerFactory<String, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
         Consumer<String, String> consumer = cf.createConsumer();
@@ -278,7 +275,7 @@ public abstract class BaseIntegrationTest {
     protected static void wait(long timeout, TimeUnit timeoutUnit) {
         try{
             Awaitility.await().timeout(timeout, timeoutUnit).until(()->false);
-        } catch (ConditionTimeoutException ex){
+        } catch (ConditionTimeoutException _){
             // Do Nothing
         }
     }
